@@ -1,0 +1,30 @@
+@for $i from 1 through 600{
+    .h-#{$i} {
+        height: $i * 1px !important; 
+    }
+}
+@for $i from 1 through 100{
+    .max-h-#{$i} {
+        max-height: $i * 1px!important; 
+    }
+}
+@for $i from 1 through 100{
+    .min-h-#{$i} {
+        min-height: $i * 1px!important; 
+    }
+}
+@for $i from 1 through 100{
+    .max-h-#{$i}p {
+        max-height: calc($i / 100) * 100% !important; 
+    }
+}
+@for $i from 1 through 100{
+    .h-#{$i}p {
+        height: calc($i / 100) * 100% !important; 
+    }
+}
+@for $i from 1 through 100{
+    .lh-#{$i} {
+        line-height: calc(100% - $i * 1px)!important; 
+    }
+}

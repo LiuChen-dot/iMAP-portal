@@ -1,0 +1,25 @@
+@for $i from 1 through 800{
+    .w-#{$i} {
+        width: $i * 1px!important; 
+    }
+}
+@for $i from 1 through 100{
+    .max-w-#{$i} {
+        max-width: $i * 1px!important; 
+    }
+}
+@for $i from 1 through 100{
+    .min-w-#{$i} {
+        min-width: $i * 1px!important; 
+    }
+}
+@for $i from 1 through 100{
+    .w-#{$i}p {
+        width: calc($i / 100) * 100%!important; 
+    }
+}
+@for $i from 1 through 100{
+    .w-calc-#{$i} {
+        width: calc(100% - $i * 1px)!important; 
+    }
+}

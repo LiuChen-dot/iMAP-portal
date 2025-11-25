@@ -1,0 +1,50 @@
+@for $i from 1 through 100{
+    .pad-#{$i} {
+        padding: $i * 1px!important; 
+    }
+}
+@for $i from 1 through 100{
+    .pad-l-#{$i} {
+        padding-left: $i * 1px!important; 
+    }
+}
+@for $i from 1 through 100{
+    .pad-r-#{$i} {
+        padding-right: $i * 1px!important; 
+    }
+}
+@for $i from 1 through 100{
+    .pad-b-#{$i} {
+        padding-bottom: $i * 1px!important; 
+    }
+}
+@for $i from 1 through 100{
+    .pad-t-#{$i} {
+        padding-top: $i * 1px!important; 
+    }
+}
+@for $i from 1 through 100{
+    .mar-#{$i} {
+        margin: $i * 1px!important; 
+    }
+}
+@for $i from 1 through 100{
+    .mar-l-#{$i} {
+        margin-left: $i * 1px!important; 
+    }
+}
+@for $i from 1 through 100{
+    .mar-r-#{$i} {
+        margin-right: $i * 1px!important; 
+    }
+}
+@for $i from 1 through 100{
+    .mar-b-#{$i} {
+        margin-bottom: $i * 1px!important; 
+    }
+}
+@for $i from 1 through 100{
+    .mar-t-#{$i} {
+        margin-top: $i * 1px!important; 
+    }
+}

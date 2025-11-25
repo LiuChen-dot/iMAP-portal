@@ -1,0 +1,225 @@
+.hidden{
+	display: none!important;
+}
+.ov-h{
+	overflow: hidden!important;
+}
+.ov-x-h{
+	overflow-x: hidden!important;
+}
+.ov-y-h{
+	overflow-y: hidden!important;
+}
+.ov-a{
+	overflow: auto!important;
+}
+.ov-x-a{
+	overflow-x: auto!important;
+}
+.ov-y-a{
+	overflow-y: auto!important;
+}
+.ov-s{
+	overflow: scroll!important;
+}
+.ov-x-s{
+	overflow-x: scroll!important;
+}
+.ov-y-s{
+	overflow-y: scroll!important;
+}
+.ov-i{
+	overflow: inherit!important;
+}
+.ov-x-i{
+	overflow-x: inherit!important;
+}
+.ov-y-i{
+	overflow-y: inherit!important;
+}
+.dis-n{
+	display: none!important;
+}
+.dis-i{
+	display: inline!important;
+}
+.dis-ih{
+	display: inherit!important;
+}
+.dis-b{
+	display: block!important;
+}
+.dis-ib{
+	display: inline-block!important;
+}
+.dis-it{
+	display: inline-table!important;
+}
+.dis-t{
+	display: table!important;
+}
+.dis-tr{
+	display: table-row!important;
+}
+.dis-tc{
+	display: table-cell!important;
+}
+.dis-tcol{
+	display: table-column!important;
+}
+.dis-li{
+	display: list-item!important;
+}
+.dis-flex{
+	display:flex!important;
+	// justify-content: space-between;
+}
+.fl-1{
+	flex: 1;
+}
+
+.fl-0{
+	flex: 0;
+}
+.flex-d{
+	flex-direction: column;
+}
+.flex-w{
+	flex-wrap: wrap;
+}
+.just-c-fs{
+	justify-content: flex-start;
+}
+.just-c-fe{
+	justify-content: flex-end;
+}
+.just-c-c{
+	justify-content: center;
+}
+.just-c-sa{
+	justify-content: space-around;
+}
+.just-c-sb{
+	justify-content: space-between;
+}
+.just-c-se{
+	justify-content: space-evenly;
+}
+.align-c{
+	align-items: center;
+}
+.align-fs{
+	align-items: flex-start;
+}
+.align-fe{
+	align-items: flex-end;
+}
+.cur-p{
+	cursor: pointer!important;
+}
+.cur-d{
+	cursor: default!important;
+}
+.cur-he{
+	cursor: help!important;
+}
+.cur-ha{
+	cursor: hand!important;
+}
+.cur-t{
+	cursor: text!important;
+}
+.cur-a{
+	cursor: auto!important;
+}
+.cur-m{
+	cursor: move!important;
+}
+.cur-c{
+	cursor: crosshair!important;
+}
+.cur-not{
+	cursor: not-allowed!important;
+}
+.ver-mid{
+	vertical-align: middle!important;
+}
+.ver-b{
+	vertical-align: bottom!important;
+}
+.ver-t{
+	vertical-align: top!important;
+}
+.push-left{
+  float: left!important;
+}
+.push-right{
+  float: right!important;
+}
+.fl{
+	float: left!important;
+}
+.fr{
+	float: right!important;
+}
+
+
+
+
+
+
+
+// :root:root {
+// 	--van-tabbar-background: #f2f3f5;
+// }
+
+.amap-logo,.amap-copyright{
+	display: none !important;
+}
+
+.van-floating-bubble {
+	width: 60px !important;
+	height: 60px !important;
+}
+
+.bg-gray{
+	background: #f2f3f5;
+}
+
+.el-switch__core .el-switch__action{
+	background-color:var(--el-theme-color) !important;
+}
+svg{
+	cursor: pointer;
+}
+
+.interlinkage {
+    color: blue !important;
+}
+
+.interlinkage:hover {
+    text-decoration: underline;
+}
+
+.dialogBox{
+	.el-overlay-dialog{
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: absolute;
+		.el-dialog{
+			overflow: hidden;
+			margin: 0 !important;
+			display: flex;
+			flex-direction: column;
+			.el-dialog__body{
+				flex:1;
+				height: 100%;
+				overflow: hidden;
+				display: flex;
+    			flex-direction: column;
+			}
+		}
+	}
+}
+

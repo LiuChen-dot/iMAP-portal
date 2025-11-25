@@ -1,0 +1,644 @@
+.gbBaseline {
+    width: 100%;
+    height: 150px;
+}
+
+.gbScroller.hasBaseline
+{
+    margin-top: -100px;
+    max-height: calc(100vh - 100px);
+}
+
+.gbReplicon
+{
+    width: 100%;
+    height: calc(100vh - 200px);
+}
+
+.gbRepliconTitle
+{
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    /* disable text select */
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    margin: 4px;
+}
+    
+.gbRepliconTitle .orgName
+{
+    color: #1A1D6E;
+    font-weight: bold;
+}
+
+.gbRepliconTitle .geneName
+{
+    color: #814681;
+    font-weight: bold;
+    margin-left: 8px;
+}
+
+.gbRepliconTitle .productName
+{
+    color: #3D9583;
+    font-weight: bold;
+    margin-left: 8px;
+}
+  
+.gb.overlay
+{
+    border: 0px;
+    padding: 0px;
+}
+
+.gb.overlay a
+{
+    font-family: sans-serif;
+    font-size: 1rem; /*15px;*/
+    position: absolute;
+    z-index: 5;
+    white-space: nowrap;
+    overflow: hidden;
+    background-color: transparent;
+    pointer-events: none;
+}
+
+.hidden
+{
+    visibility: hidden;
+}
+
+.hide
+{
+    display: none !important;
+}
+
+.gb a
+{
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+}
+
+.gb 
+{
+    font-family: sans-serif;
+}
+
+.gbtooltip
+{
+    position: absolute;
+    box-sizing: border-box;
+    border: 1px solid #000;
+    border-radius: 10px;
+    background-color: #F0F0F0;
+    padding: 5px;
+    z-index: 6;
+    max-width:400px;
+    font-family: sans-serif;
+    font-size: .8rem;
+}
+
+.gbContextMenu
+{
+    position: absolute;
+    box-sizing: border-box;
+    border: 1px solid #DDD;
+    background-color: white;
+    padding: 5px;
+    z-index: 7;
+}
+
+.gbContextMenu div
+{
+    display: flex;
+    padding: 4px 2px;
+    text-decoration: none;
+    cursor: pointer;
+    font-family: sans-serif;
+    font-size: .75rem;
+}
+
+.gbContextMenu div:hover
+{
+    background-color: #DDD;
+}
+
+.gbControl
+{
+    /*
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0px;
+    background-color: white;
+    z-index: 1;
+    height: 110px;
+   */
+}
+
+.gbControl .gbSeparator
+{
+    width: 100vw;
+    font-size: 7px;
+    border-top: 1px solid #444;
+    background:linear-gradient(to bottom, #CCC, #FFF);
+    margin-top: -20px;
+    margin-left: -20px;
+}
+
+.gbControl .banner
+{
+    display: flex;
+}
+
+.gbControl .centered
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gbControl .title
+{
+    margin: auto;
+    white-space: nowrap;
+    overflow: auto;
+}
+
+.gbControl .title button
+{
+    background-color: #f2bb85;
+    border-radius: 4px;
+    border-width: 1px;
+    padding: 2px 6px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.gbControl .bold
+{
+    font-weight: bold;
+}
+
+.gbControl .fa-search
+{
+    margin-left: 4px;
+}
+
+.gbControl .speedBar
+{
+    display: inline-flex;
+    align-items: top;
+    justify-content: top;
+    padding: 5px 0px 10px 0px;
+    margin-left: calc(50% - 210px);
+}
+
+.gbControl #speed
+{
+    color: #ccc;
+    text-align: center;
+    position: relative;
+    width: 200px;
+}
+
+.gbControl #speed hr
+{
+    position:absolute;
+    bottom: -1px;
+    width:100%;
+}
+
+.gbControl #speed .fa-caret-up
+{
+    position: absolute;
+    margin: 0px 0px 0px -5px;
+    bottom: -5px;
+}
+
+.gbControl #speed.active
+{
+    color: black;
+}
+
+.gbControl #speed.active hr
+{
+    border:solid 1px black;
+}
+
+.gbControl #speedVel
+{
+    position: absolute;
+    top: -10px;
+}
+.gbControl button .fas
+{
+    margin: 0px 4px;
+}
+
+.gbControl .dropmenu div
+{
+    display: flex;
+    padding: 4px 2px;
+    text-decoration: none;
+    cursor: pointer;
+    font-family: sans-serif;
+    font-size: .75rem;
+}
+
+.gbControl .dropmenu div:hover
+{
+    background-color: #AAA;
+}
+
+.gbControl .popup
+{
+    position: absolute;
+    box-sizing: border-box;
+    border: 1px solid #888;
+    background-color: #FFF;
+    padding: 5px;
+    z-index: 100;
+}
+
+.gbControl .popup .titlebar
+{
+    background-color: #E8E8E8;
+    display: flex;
+    cursor: move;
+    padding: 4px;
+}
+
+.gbControl .popup .title
+{
+    font-style: italic;
+}
+
+.gbControl .popup .fa-window-close
+{
+    float: right;
+    cursor: pointer;
+    margin-left: 8px;
+}
+
+.gbControl .popup .title .fa-window-close
+{
+    cursor: pointer;
+}
+
+.gbControl .legend table
+{
+    z-index: 5;
+    border-collapse: separate;
+    border-spacing: 0px;
+    white-space: nowrap;
+}
+
+.gbControl .legend .icon
+{
+    width: 50px;
+    height: 20px;
+}
+
+.gbControl .legend input
+{
+    margin: 0px;
+    accent-color: #232323;
+}
+
+.gbControl .legend th
+{
+    font-size: .75rem;
+    font-style: italic;
+    text-align: left;
+}
+
+.gbControl .legend tr:nth-child(2) th
+{
+    border-bottom: 1px solid #DDD;
+}
+
+
+.gbControl .legend td.disabled
+{
+    color: #aaa;
+}
+
+.gbControl .buttons
+{
+    margin: 5px;
+    float: right;
+}
+
+.gbControl .qhelp
+{
+    width: 800px;
+}
+
+.gbControl .browserLabel
+{
+    font-size: 1.8rem;
+    font-weight: bolder;
+    line-height: 40px; 
+    white-space: nowrap;
+    margin: 4px;
+}
+
+.gbControl .title .searchContainer
+{
+    /*BioCyc_Extra.css?v=27.0*/
+    width: 548px;
+    height: 36px;
+    border-top: 2px solid #9A9A9A;
+    border-left: 2px solid #9A9A9A;
+    border-bottom: 2px solid #EEEEEE;
+    border-right: 2px solid #EEEEEE;
+}
+
+.gbControl .title .searchLabel
+{
+    font-weight: bolder;
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+.gbControl .title .searchBox
+{
+    font-size: 16px;
+    width: 95%;
+    height: 100%;
+    border: 0px;
+}
+
+.gbControl .title .fa-search
+{
+}
+
+.gbControl .searchDropdown
+{
+    max-height: 400px;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 8px;
+    position: absolute;
+    box-sizing: border-box;
+    border: 3px solid #000;
+    border-radius: 10px;
+    background-color: #F0F0F0;
+    z-index: 101;
+}
+
+.gbControl .searchDropdown table
+{
+    z-index: 5;
+    border-collapse: separate;
+    border-spacing: 0px;
+    white-space: nowrap;
+    font-family: sans-serif;
+}
+
+.gbControl .searchDropdown th
+{
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0px;
+    background-color: #FFFFFF;
+    z-index: 4;
+}
+
+.gbControl .searchDropdown td
+{
+    padding: 4px;
+    max-width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.gbControl .searchDropdown tr.even td
+{
+    background-color: #F0F0F0;
+}
+
+.gbControl .searchDropdown tr.odd td
+{
+    background-color: #F8F8F8;
+}
+
+.gbControl .searchDropdown tr:hover td
+{
+    background-color: #DDD;
+}
+
+.gbControl .zoomlevels span
+{
+    margin: 4px;
+    cursor: pointer;
+    color: blue;
+}
+
+.gbControl .zoomlevels .active
+{
+    font-weight: bold;
+    color: blue;
+    background-color: #DDD;
+}
+
+/*
+.gbCmpBro:nth-child(1)
+{
+    position: -webkit-sticky;
+    position: sticky;
+    top: 110px;
+    z-index: 1;
+}
+*/
+
+.gbCmpBro
+{
+    background-color: white;
+    border: 2px solid white;
+    border-top: 1px solid gray;
+    width: 100vw;
+}
+
+.gbCmpBro canvas
+{
+    margin-top: -10px;
+}
+
+.gbCmpBro.enter
+{
+    border: 2px solid gray;
+    cursor: ns-resize;
+}
+
+.gbCmpBro.move
+{
+    border: 2px solid blue;
+    cursor: ns-resize;
+}
+
+.gbCmpDrag
+{
+    position: absolute;
+    cursor: ns-resize;
+    z-index: 100;
+    border: 2px solid purple;
+}
+
+.genbro-iframe
+{
+    width: 100vw;
+    height: calc(100vh - 10px);
+}
+
+/* animation location marker */
+:root {
+    --fly-top-start: 0px;
+    --fly-top-end: 200px;
+    --fly-left0: 0px;
+    --fly-left50: 200px;
+    --fly-left75: 200px;
+    --fly-left100: 200px;    
+}
+
+@keyframes fly {
+    0%   {color:yellow; left:var(--fly-left0); top: var(--fly-top-start); transform: rotate(0deg);}
+    50% {color:red; left:(--fly-left50); top: var(--fly-top-end); transform: rotate(180deg);}
+    75% {color:red; left:(--fly-left75); top: var(--fly-top-end); transform: rotate(180deg);}
+    100% {color:red; left:(--fly-left100); top: var(--fly-top-end); transform: rotate(180deg);}
+}
+
+.fa-map-marker-alt {
+    color: red;
+    position: absolute;
+    top:200px;
+    left: 200px;
+    z-index: 5;
+    font-size: 2rem;	      
+    animation-name: fly;
+    animation-duration: 2.5s;
+    transform: rotate(180deg);
+}
+
+
+.gbTrackScroller
+{
+    max-height: calc(100vh - 390px);
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-top: -3px;
+}
+
+.gbTrack
+{
+    width: 100%;
+    height: 100px;
+}
+
+.gbTrackDropdown input
+{
+    width: 4ch;
+}
+
+.badval
+{
+    color: red;
+}
+
+.gbWelcome
+{
+  width: 400px;
+  background-color: white;
+}
+
+.gbWelcome .donotshow
+{
+    float: right;
+}
+
+label[for=addfile]
+{
+    font-size: .8rem;
+    color: rgb(133,133,133);
+    background-color: white;
+    border: 1px solid rgb(133,133,133);
+    border-radius: 3px;
+    padding: 1px 2px;
+    min-width: 20ch;
+    display: inline-flex;
+}
+
+.gbTracksMenu
+{
+    min-width: 500px;
+}
+
+.gbTracksMenu table th,
+.gbTracksMenu table td
+{
+    padding: 2px 8px;
+}
+
+.gbTracksMenu .align-left
+{
+    text-align: left;
+}
+
+.gbTracksMenu .align-center
+{
+    text-align: center;
+}
+
+.gbTracksMenu button
+{
+/*    float: right;*/
+    margin: 4px;
+}
+
+.gbTracksMenu td[data-key=min],
+.gbTracksMenu td[data-key=max]
+{
+    border-bottom: 1px solid black;
+}
+
+.gbTracksMenu input[type=checkbox]:checked,
+.gbWelcome input[type=checkbox]:checked				       
+{
+    accent-color: whitesmoke;
+    /* filter: sepia(100%) brightness(80%) hue-rotate(170deg) saturate(70%) contrast(300%);*/
+}
+
+.gbControl .busy
+{
+    font-size: 3rem;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+}
+
+/*
+  force window scrollbar to always be visible. Unfortunately, it requires a setting configuration in firefox: 
+  about:config 
+  layout.testing.overlay-scrollbars.always-visible true
+*/
+
+body {
+    overflow-y: -moz-scrollbars-vertical; 
+}
+
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 7px;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, .5);
+  -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+}

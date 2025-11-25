@@ -1,0 +1,105 @@
+@for $i from 1 through 100{
+    .top-#{$i} {
+        top: $i * 1px!important; 
+    }
+}
+@for $i from 1 through 100{
+    .top-#{$i}f {
+        top: - $i * 1px!important; 
+    }
+}
+@for $i from 1 through 100 {
+    .top-#{$i}p {
+        top: calc($i / 100) * 100%!important;
+    }
+}
+@for $i from 1 through 100{
+    .bottom-#{$i} {
+        bottom: $i * 1px!important; 
+    }
+}
+@for $i from 1 through 100{
+    .bottom-#{$i}f {
+        bottom: - $i * 1px!important; 
+    }
+}
+@for $i from 1 through 100 {
+    .bottom-#{$i}p {
+        bottom: calc($i / 100) * 100%!important;
+    }
+}
+@for $i from 1 through 100{
+    .left-#{$i} {
+        left: $i * 1px!important; 
+    }
+}
+@for $i from 1 through 100{
+    .left-#{$i}f {
+        left: - $i * 1px!important; 
+    }
+}
+@for $i from 1 through 100 {
+    .left-#{$i}p {
+        left: calc($i / 100) * 100%!important;
+    }
+}
+@for $i from 1 through 100{
+    .right-#{$i} {
+        right: $i * 1px!important; 
+    }
+}
+@for $i from 1 through 100{
+    .right-#{$i}f {
+        right: - $i * 1px!important; 
+    }
+}
+@for $i from 1 through 100 {
+    .right-#{$i}p {
+        right: calc($i / 100) * 100%!important;
+    }
+}
+@for $i from 0 through 10{
+    .zIndex-#{$i} {
+        z-index: $i !important; 
+    }
+}
+
+.zIndex-max{
+	z-index: 99999999999;
+}
+.pos-r{
+	position: relative!important;
+}
+.pos-a{
+	position: absolute!important;
+}
+.pos-f{
+	position: fixed!important;
+}
+.pos-s{
+	position: static!important;
+}
+.pr{
+  position: relative!important;
+}
+.pa{
+  position: absolute!important;
+}
+.pf{
+  position: fixed!important;
+}
+.ps{
+  position: static!important;
+}
+.left-auto{
+  left: auto!important;
+}
+.right-auto{
+  right: auto!important;
+}
+.top-auto{
+  top: auto!important;
+}
+.bottom-auto{
+  bottom: auto!important;
+}

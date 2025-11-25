@@ -1,0 +1,429 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width">
+	<meta name="viewport" content="initial-scale=1.0">
+
+	<link rel="stylesheet" type="text/css"
+		href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css">
+
+	<link rel="stylesheet" type="text/css" href="genbro.css">
+
+	<script src="genbro.js"></script>
+	<script src="gbortho.js"></script>
+	<script src="gbseq.js"></script>
+	<script src="gbtracks.js"></script>
+	<script src="gbmenu.js"></script>
+	<script src="gbutils.js"></script>
+
+</head>
+
+<body>
+	<div class="gbControl hide">
+		<div class="gbSeparator">&nbsp;</div>
+		<div class="banner">
+			<span class="browserLabel">Genome Explorer</span>
+			<div class="title centered">
+				<label class="searchLabel">Search in Genome Explorer:</label>
+				<span class="searchContainer">
+					<input type="search" class="searchBox" autocomplete="off" autocorrect="off" autocapitalize="off"
+						spellcheck="false" placeholder="Gene, base coordinate, or base 'start - end' range" />
+					<i class="fas fa-search"></i>
+				</span>
+			</div>
+		</div>
+		<div class="title">
+			<span class="centered">
+
+				<button id="browse"
+					title="Browse a different replicon or start a comparative genome browse.">Browse</button>
+
+				<button title="Visually scans through the genome at a rate controlled by the mouse." class='hide'
+					id="play"><i class="fas fa-play"></i><span>Auto Scroll</span></button>
+				<button id="seqselect"
+					title="Specify a region of nucleotide or amino-acid sequence for downloading to a file or insertion on the clipboard."><i
+						class="fas fa-download"></i>Get Sequence</button>
+
+				<button id="legend"
+					title="Pop up a legend explaining the graphical symbols used in the browser, and enable/disable display of these symbols."><i
+						class="fas fa-info-circle"></i>Legend & Filter</button>
+
+				<button id="qhelp" title="Shows a set of basic usage tips for the genome browser."><i
+						class="fas fa-question-circle"></i>Quick Help</button>
+
+				<button id="tracks" title="Pop up a track dialog add/remove/control display of track data."><i
+						class="fas fa-chart-line"></i><span>Tracks</span></button>
+
+			</span>
+			<span class="speedBar hide">
+				<i class="fas fa-minus"></i>
+				<span id="speed">
+					<hr><span id="speedVel"></span> <i class="fas fa-caret-up"></i>
+				</span>
+				<i class="fas fa-plus"></i>
+			</span>
+
+		</div>
+
+		<div class="title">
+			<span class="centered">
+				<span class="zoomlevels">
+					<label> zoom level: </label>
+					<span id="genome">Genome</span> |
+					<span id="operons"> Operons </span> |
+					<span id="genes" class='active'> Genes </span> |
+					<span id="sites"> Sites </span> |
+					<span id="sequence"> Sequence </span>
+				</span>
+			</span>
+		</div>
+
+		<div class="browseMenu popup dropmenu hidden">
+			<div id='browseRepl' onclick="GBMenu.OnNewRepl()">Browse New Single Replicon</div>
+			<div id='browseNewCmp' onclick="GBMenu.OnNewCmpAskForGene()">New Multi-Genome Alignment</div>
+		</div>
+
+		<div class="newCmpDlg popup hidden">
+			<div class="titlebar">
+				<div class="title">Launch Comparative Genome Explorer</div>
+				<i class="far fa-window-close"></i>
+			</div>
+			<div class="centered">
+				<p> First, select the gene, on which to center:<br>
+			</div>
+			<div class="centered">
+				<input type="search" autocomplete="off" class="searchBox" placeholder="lead gene" /><i
+					class="fas fa-search"></i>
+			</div>
+			<div class="centered">
+				Organisms for the comparison will be selected in the next dialog.<br>
+			</div>
+			<div class="buttons">
+				<button id="ok">OK</button>
+			</div>
+		</div>
+
+		<div class="seqselectMenu popup dropmenu hidden">
+			<div id='seqselectDNA'>Get DNA Sequence Region</div>
+			<div id='seqselectAA'>Get AA Sequence Region</div>
+		</div>
+
+		<!-- For DNA sequences -->
+		<div class="seqselect popup hidden">
+			<div class="titlebar">
+				<div class="title">Select and Export DNA Sequence Region</div>
+				<i class="far fa-window-close"></i>
+			</div>
+			To select a DNA sequence region:
+			<ol>
+				<li> Move mouse near desired start base and zoom in until sequence<br>
+					is visible, such as by scrolling with mouse wheel.
+				<li> Click the Select Start button, then click desired start base.
+				<li> Click the Select End button, then click an end base <B>on the same strand</B>.<br>
+					To select a long region, you may need to bring the end base into view,<br>
+					such as by clicking and dragging up/down.
+				<li> Then copy the region to the clipboard and/or export it to a FASTA file.<br>
+					The exported sequence will be in the 5' -> 3' direction.
+			</ol>
+			<table id="seqselecttable">
+				<tr id="seqselectstart">
+					<td align="right"><button id="btnSelectstart" onclick="GBSeq.OnSeqSelectStart()">Select
+							Start</button></td>
+					<td>Select the Start Base</td>
+					<td id="startbpvalue" Align="right">&nbsp;</td>
+				</tr>
+				<tr id="seqselectend">
+					<td align="right"><button id="btnSelectend" onclick="GBSeq.OnSeqSelectEnd()">Select End</button>
+					</td>
+					<td>Select the End Base</td>
+					<td id="endbpvalue" align="right">&nbsp;</td>
+				</tr>
+				<tr id="seqselectwraparound">
+					<td align="right"><input type="checkbox" id="btnSelectWrapAround"
+							onclick="GBSeq.OnSeqSelectWrapAround()" disabled="true"> </td>
+					<td id="wrapExpl">Wrap around origin?</td>
+					<td id="wrapP" align="right">No</td>
+				</tr>
+				<tr id="seqselectlength">
+					<td id="strandStr">&nbsp;</td>
+					<td id="totalLengthStr">&nbsp;</td>
+					<td id="lengthbpvalue" align="right">&nbsp;</td>
+				</tr>
+				<tr id="seqselectclear">
+					<td align="right"><button id="btnSelectclear" onclick="GBSeq.OnSeqSelectClear()">Clear</button></td>
+					<td>Clear the current selection</td>
+					<td id="endbpvalue" align="right">&nbsp;</td>
+				</tr>
+			</table>
+			<hr>
+			<table id="seqexporttable">
+				<tr id="exportclipboard">
+					<td align="right"><button id="btnExportClipBoard" onclick="GBSeq.OnSeqSelectExportClipBoard()"
+							disabled="true">Copy to Clipboard</button></td>
+					<td>Copy the Sequence to the Clipboard</td>
+				</tr>
+				<tr id="exportfile">
+					<td align="right"><button id="btnExportFile" onclick="GBSeq.OnSeqSelectExportFile()"
+							disabled="true">Export to FASTA</button></td>
+					<td>Export the Sequence to a FASTA File</td>
+				</tr>
+			</table>
+		</div>
+
+		<!-- For AA sequences -->
+		<div class="seqselectAma popup hidden">
+			<div class="titlebar">
+				<div class="title">Select and Export Amino Acid Sequence Region</div>
+				<i class="far fa-window-close"></i>
+			</div>
+			To select an amino acid sequence region:
+			<ol>
+				<li> Move mouse near desired start and zoom in until sequence<br>
+					is visible, such as by scrolling with mouse wheel.
+				<li> Click the Select Start button, then click desired start amino acid.
+				<li> Click the Select End button, then click an end amino acid
+					<B>in the same gene product</B>.<br>
+					To select a long region, you may need to bring the end into view,<br>
+					such as by clicking and dragging up/down.
+				<li> Then copy the region to the clipboard and/or export it to a FASTA file.
+			</ol>
+			<table id="seqselecttableAA">
+				<tr id="seqselectstartAA">
+					<td align="right"><button id="btnSelectstartAA" onclick="GBSeq.OnSeqSelectStartAA()">Select
+							Start</button></td>
+					<td>Select the Start Amino Acid</td>
+					<td id="startAAvalue" Align="right">&nbsp;</td>
+				</tr>
+				<tr id="seqselectendAA">
+					<td align="right"><button id="btnSelectendAA" onclick="GBSeq.OnSeqSelectEndAA()">Select End</button>
+					</td>
+					<td>Select the End Amino Acid</td>
+					<td id="endAAvalue" align="right">&nbsp;</td>
+				</tr>
+				<tr id="seqselectlengthAA">
+					<td id="AAproductNameStr">&nbsp;</td>
+					<td id="totalLengthStrAA">&nbsp;</td>
+					<td id="lengthAAvalue" align="right">&nbsp;</td>
+				</tr>
+				<tr id="seqselectclearAA">
+					<td align="right"><button id="btnSelectclearAA" onclick="GBSeq.OnSeqSelectClearAA()">Clear</button>
+					</td>
+					<td>Clear the current selection</td>
+					<td id="endAAvalue" align="right">&nbsp;</td>
+				</tr>
+			</table>
+			<hr>
+			<table id="seqexporttableAA">
+				<tr id="exportclipboardAA">
+					<td align="right"><button id="btnExportClipBoardAA" onclick="GBSeq.OnSeqSelectExportClipBoardAA()"
+							disabled="true">Copy to Clipboard</button></td>
+					<td>Copy the Sequence to the Clipboard</td>
+				</tr>
+				<tr id="exportfileAA">
+					<td align="right"><button id="btnExportFileAA" onclick="GBSeq.OnSeqSelectExportFileAA()"
+							disabled="true">Export to FASTA</button></td>
+					<td>Export the Sequence to a FASTA File</td>
+				</tr>
+			</table>
+		</div>
+
+		<div class="legend popup hidden">
+			<div class="titlebar">
+				<div class="title">Legend</div>
+				<i class="far fa-window-close"></i>
+			</div>
+			<table>
+				<tr>
+					<th colSpan='5'>On/Off = Enable/disable display of selected elements</th>
+				</tr>
+				<tr>
+					<th colSpan='5'>Auto = Visibility determined automatically from zoom level</th>
+				</tr>
+				<tr>
+					<th id='on'>On</th>
+					<th id='off'>Off</th>
+					<th id='auto'>Auto</th>
+					<th></th>
+					<th></th>
+				</tr>
+				<tr>
+					<td><input type="radio" name='all' id='on'></td>
+					<td><input type="radio" name='all' id='off'></td>
+					<td><input type="radio" name='all' id='auto'></td>
+					<td></td>
+					<td><i>Select All</i></td>
+				</tr>
+				<tr id="operon">
+					<td><input type="radio" name='operon' id='on'></td>
+					<td><input type="radio" name='operon' id='off'></td>
+					<td><input type="radio" name='operon' id='auto'></td>
+					<td><canvas class="icon"></canvas></td>
+					<td>Operon</td>
+				</tr>
+				<tr id="insertion">
+					<td><input type="radio" name='insertion' id='on'></td>
+					<td><input type="radio" name='insertion' id='off'></td>
+					<td><input type="radio" name='insertion' id='auto'></td>
+					<td><canvas class="icon"></canvas></td>
+					<td>Insertion Element</td>
+				</tr>
+				<tr id="protein">
+					<td><input type="radio" name='protein' id='on'></td>
+					<td><input type="radio" name='protein' id='off'></td>
+					<td><input type="radio" name='protein' id='auto'></td>
+					<td><canvas class="icon"></canvas></td>
+					<td>Protein-Coding Gene</td>
+				</tr>
+				<tr id="rna">
+					<td><input type="radio" name='rna' id='on'></td>
+					<td><input type="radio" name='rna' id='off'></td>
+					<td><input type="radio" name='rna' id='auto'></td>
+					<td><canvas class="icon"></canvas></td>
+					<td>RNA-Coding Gene</td>
+				</tr>
+				<tr id="pseudo">
+					<td><input type="radio" name='pseudo' id='on'></td>
+					<td><input type="radio" name='pseudo' id='off'></td>
+					<td><input type="radio" name='pseudo' id='auto'></td>
+					<td><canvas class="icon"></canvas></td>
+					<td>Pseudo Gene</td>
+				</tr>
+				<tr id="phantom">
+					<td><input type="radio" name='phantom' id='on'></td>
+					<td><input type="radio" name='phantom' id='off'></td>
+					<td><input type="radio" name='phantom' id='auto'></td>
+					<td><canvas class="icon"></canvas></td>
+					<td>Phantom Gene</td>
+				</tr>
+				<tr id="promoter">
+					<td><input type="radio" name='promoter' id='on'></td>
+					<td><input type="radio" name='promoter' id='off'></td>
+					<td><input type="radio" name='promoter' id='auto'></td>
+					<td><canvas class="icon"></canvas></td>
+					<td>Transcription Start Site</td>
+				</tr>
+				<tr id="terminator">
+					<td><input type="radio" name='terminator' id='on'></td>
+					<td><input type="radio" name='terminator' id='off'></td>
+					<td><input type="radio" name='terminator' id='auto'></td>
+					<td><canvas class="icon"></canvas></td>
+					<td>Terminator</td>
+				</tr>
+				<tr id="attenuator">
+					<td><input type="radio" name='attenuator' id='on'></td>
+					<td><input type="radio" name='attenuator' id='off'></td>
+					<td><input type="radio" name='attenuator' id='auto'></td>
+					<td><canvas class="icon"></canvas></td>
+					<td>Attenuator</td>
+				</tr>
+				<tr id="tfbs">
+					<td><input type="radio" name='tfbs' id='on'></td>
+					<td><input type="radio" name='tfbs' id='off'></td>
+					<td><input type="radio" name='tfbs' id='auto'></td>
+					<td><canvas class="icon"></canvas></td>
+					<td>Transcription-Factor Binding Site</td>
+				</tr>
+				<tr id="mrna">
+					<td><input type="radio" name='mrna' id='on'></td>
+					<td><input type="radio" name='mrna' id='off'></td>
+					<td><input type="radio" name='mrna' id='auto'></td>
+					<td><canvas class="icon"></canvas></td>
+					<td>mRNA Binding Site</td>
+				</tr>
+				<tr id="rbs">
+					<td><input type="radio" name='rbs' id='on'></td>
+					<td><input type="radio" name='rbs' id='off'></td>
+					<td><input type="radio" name='rbs' id='auto'></td>
+					<td><canvas class="icon"></canvas></td>
+					<td>Ribosome Binding Site</td>
+				</tr>
+				<tr id="extragenic">
+					<td><input type="radio" name='extragenic' id='on'></td>
+					<td><input type="radio" name='extragenic' id='off'></td>
+					<td><input type="radio" name='extragenic' id='auto'></td>
+					<td><canvas class="icon"></canvas></td>
+					<td>Extragenic Site</td>
+				</tr>
+			</table>
+		</div>
+
+		<div class="qhelp popup hidden">
+			<div class="titlebar ">
+				<div class="title"> Quick Help </div>
+				<i class="far fa-window-close"></i>
+			</div>
+			<div id="quickhelpcontent"></div>
+		</div>
+
+		<div class="searchDropdown hide">
+			<table class="searchGenes hide"> </table>
+		</div>
+
+		<i class="fas fa-map-marker-alt hide"></i>
+
+		<div class="gbContextMenu hide">
+			<div id='menuCenterGene' onclick="GBMenu.OnCenterGene()">Center Gene</div>
+			<div id='menuGenePageNewTab' onclick="GBMenu.OnGenePageNewTab(event);">Open Gene Page in new Tab</div>
+			<div id='menuNewCmp' onclick="GBMenu.OnNewCmp()">New Multi-Genome Alignment at Gene</div>
+			<!-- kr:Sep-25-2023 The next item is only for the CmpGenbro, and so it is hidden in the regular Genbro -->
+			<div id='menuGenbroGene' onclick="GBMenu.OnGenbroGene()">Browse Single Replicon at Gene</div>
+			<div id='menuSeqAlignNT' onclick="GBMenu.OnSeqAlignOrthoNT()">Align Gene Nucleotide Sequence</div>
+			<div id='menuSeqAlignAA' onclick="GBMenu.OnSeqAlignOrthoAA()">Align Gene Product Amino Acid Sequence</div>
+		</div>
+
+		<div class="gbTracksMenu popup hidden">
+			<div class="titlebar ">
+				<div class="title">Tracks Control Panel</div>
+				<i class="far fa-window-close"></i>
+			</div>
+			<table>
+			</table>
+			<div>
+				<button id="btnTracksFile">
+					<label for="trackfile">
+						<i class="fas fa-file-upload" title="upload local gff file"></i> Add Tracks (file)
+					</label>
+					<input id="trackfile" type="file" accept=".gff" style="display:none" />
+				</button>
+			</div>
+			<div>
+			</div>
+		</div>
+
+		<div class="gbWelcome popup hidden">
+			<div class="titlebar ">
+				<div class="title">Genome Explorer Tips</div>
+				<i class="far fa-window-close"></i>
+			</div>
+			<p>
+				Zoom by scrolling with the mouse wheel or trackpad -- zooming is
+				centered at the mouse position
+			</p>
+			<p>
+				Pan by clicking and dragging
+			</p>
+			<p>
+				See more tips by clicking the Quick Help button
+			</p>
+
+			<div class="donotshow">
+				<input type="checkbox" checked>
+				<i>Don't show message again</i>
+			</div>
+		</div>
+
+		<div class="busy fas fa-spin fa-spinner hide"></div>
+
+		<div class="gbCmpDrag hide"> </div>
+
+		<div class="gbtooltip hide"></div>
+
+	</div>
+
+	<div id="gbBrowser"></div>
+
+</body>
+
+</html>
