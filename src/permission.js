@@ -16,6 +16,20 @@ import {
 import useUserStore from '@/store/modules/user'
 import useSettingsStore from '@/store/modules/settings'
 import usePermissionStore from '@/store/modules/permission'
+import zhMessages from '@/utils/i18n/zh'
+import enMessages from '@/utils/i18n/en'
+
+// 获取翻译文本的工具函数
+function getI18nMessage(key) {
+  const locale = localStorage.getItem('i18n') || 'en'
+  const messages = locale === 'zh' ? zhMessages : enMessages
+  const keys = key.split('.')
+  let value = messages
+  for (const k of keys) {
+    value = value?.[k]
+  }
+  return value || key
+}
 
 NProgress.configure({
   showSpinner: false
@@ -27,7 +41,7 @@ router.beforeEach((to, from, next) => {
   NProgress.start()
   console.log(to)
   if(to.meta.isDev){
-    ElMessage.warning('该功能暂未开放，敬请期待. . .')
+    ElMessage.warning(getI18nMessage('permission.featureNotAvailable'))
     next('')
     return;
   }
@@ -68,7 +82,7 @@ router.beforeEach((to, from, next) => {
     }
   } else {
     if (to.path == '/Search'||to.path == '/16S' || to.path=='/KnowledgeGraph'|| to.path=='/GenomeBrowser'|| to.path=='/MetagenomicAnalysis'|| to.path=='/Stastics'|| to.path=='/IntelligentQ&A') {
-      ElMessage.warning('请先进行登录!')
+      ElMessage.warning(getI18nMessage('permission.pleaseLogin'))
       next('')
     } else {
       usePermissionStore().generateRoutes().then(accessRoutes => {

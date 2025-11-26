@@ -32,7 +32,7 @@
 
 <script setup>
 const gotogw = ()=>{
-  window.open('http://www.fojann.com')
+  window.open('https://www.lishan.ltd/')
 }
 </script>
 

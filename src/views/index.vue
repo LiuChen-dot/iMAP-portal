@@ -170,7 +170,6 @@ import modulebox3 from '@/assets/images/home/modulebox3.svg'
 import modulebox4 from '@/assets/images/home/modulebox4.svg'
 import banner1 from '../assets/images/banner1.jpg'
 import banner2 from '../assets/images/banner2.jpg'
-import banner3 from '../assets/images/banner3.jpg'
 import Bottom from "@/layout/components/Bottom/index.vue"
 import basic_information from '@/assets/images/home/basic_information.png'
 import Gene from '@/assets/images/home/Gene.png'
@@ -184,7 +183,7 @@ const languageStore = useLanguageStore()
 const routers = useRouter()
 const i18n = computed(() => languageStore.i18n)
 
-const banner = [banner1, banner2, banner3]
+const banner = [banner1, banner2]
 const contentbacimgs = {
   basic_information,
   Gene,

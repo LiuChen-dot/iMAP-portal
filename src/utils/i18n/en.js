@@ -98,5 +98,9 @@ export default {
         tbsm: 'Chart Description',
         fxsz: 'Analysis Settings',
         tbtz: 'Chart Adjustment'
+    },
+    permission: {
+        featureNotAvailable: 'This feature is not yet available, please stay tuned. . .',
+        pleaseLogin: 'Please log in first. For account application, please contact lishan@lishan.ltd.'
     }
 }

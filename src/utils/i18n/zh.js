@@ -100,5 +100,9 @@ export default {
         tbsm: '图表说明',
         fxsz: '分析设置',
         tbtz: '图表调整'
+    },
+    permission: {
+        featureNotAvailable: '该功能暂未开放，敬请期待. . .',
+        pleaseLogin: '请先进行登录。账号申请请联系lishan@lishan.ltd。'
     }
 }
