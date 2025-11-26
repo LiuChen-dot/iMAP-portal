@@ -158,6 +158,8 @@ function setLayout() {
   display: flex;
   align-items: center;
   margin-left: 50px;
+  margin-right: 50px;
+  gap: 24px;
   cursor: pointer;
 
   .el-image {

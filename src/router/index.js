@@ -119,8 +119,6 @@ export const constantRoutes = [{
     icon: "menu5",
     affix: true,
   },
-
-
   children: [{
     path: "/16S",
     component: () => import("@/views/16S/index"),
@@ -146,6 +144,7 @@ export const constantRoutes = [{
 {
   path: '',
   component: Layout,
+  hidden: true,
   children: [{
     path: "/taskupload",
     component: () => import("@/views/16S/taskupload"),
@@ -156,6 +155,7 @@ export const constantRoutes = [{
 {
   path: '',
   component: Layout,
+  hidden: true,
   children: [{
     path: "/taskdetails",
     component: () => import("@/views/16S/taskdetails"),
@@ -194,6 +194,7 @@ export const constantRoutes = [{
 {
   path: '',
   component: Layout,
+  hidden: true,
   children: [{
     path: "/userInfo",
     component: () => import("@/views/userInfo/index"),
@@ -203,6 +204,7 @@ export const constantRoutes = [{
 {
   path: '',
   component: Layout,
+  hidden: true,
   children: [{
     path: "/Search",
     component: () => import("@/views/Search/index"),
@@ -212,6 +214,7 @@ export const constantRoutes = [{
 {
   path: '',
   component: Layout,
+  hidden: true,
   children: [{
     path: "/treeChart",
     component: () => import("@/views/treeChart/index"),
@@ -221,6 +224,7 @@ export const constantRoutes = [{
 {
   path: '',
   component: Layout,
+  hidden: true,
   children: [{
     path: "/SearchList",
     component: () => import("@/views/Search/SearchList"),
@@ -230,6 +234,7 @@ export const constantRoutes = [{
 {
   path: '',
   component: Layout,
+  hidden: true,
   children: [{
     path: "/protein",
     component: () => import("@/views/Search/protein"),
@@ -239,6 +244,7 @@ export const constantRoutes = [{
 {
   path: '',
   component: Layout,
+  hidden: true,
   children: [{
     path: "/basic_information",
     component: () => import("@/views/Search/protein"),
@@ -248,6 +254,7 @@ export const constantRoutes = [{
 {
   path: '',
   component: Layout,
+  hidden: true,
   children: [{
     path: "/go_terms",
     component: () => import("@/views/Search/protein"),
@@ -257,6 +264,7 @@ export const constantRoutes = [{
 {
   path: '',
   component: Layout,
+  hidden: true,
   children: [{
     path: "/Gene",
     component: () => import("@/views/Search/Gene"),
@@ -266,6 +274,7 @@ export const constantRoutes = [{
 {
   path: '',
   component: Layout,
+  hidden: true,
   children: [{
     path: "/disease",
     component: () => import("@/views/Search/Gene"),
@@ -275,6 +284,7 @@ export const constantRoutes = [{
 {
   path: '',
   component: Layout,
+  hidden: true,
   children: [{
     path: "/small_molecule",
     component: () => import("@/views/Search/protein"),
@@ -284,6 +294,7 @@ export const constantRoutes = [{
 {
   path: '',
   component: Layout,
+  hidden: true,
   children: [{
     path: "/rna",
     component: () => import("@/views/Search/protein"),
@@ -293,6 +304,7 @@ export const constantRoutes = [{
 {
   path: '',
   component: Layout,
+  hidden: true,
   children: [{
     path: "/cytoscape",
     component: () => import("@/views/cytoscape/index"),
@@ -302,6 +314,7 @@ export const constantRoutes = [{
 {
   path: '',
   component: Layout,
+  hidden: true,
   children: [{
     path: "/ceshi",
     component: () => import("@/views/ceshi"),

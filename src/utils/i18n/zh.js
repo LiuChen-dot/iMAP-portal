@@ -17,7 +17,7 @@ export default {
         sixteenS: '生信分析',
         sixteenS16s: '16S分析',
         sixteenSMA: '宏基因组',
-        Stastics: '统计',
+        Stastics: '数据总览',
         Intelligent: '智能问答',
     },
     file:{

@@ -15,7 +15,7 @@ export default {
         sixteenS: 'Sequencing Analysis',
         sixteenS16s: '16S rRNA sequencing analysis',
         sixteenSMA: 'Metagenomic Analysis',
-        Stastics: 'Stastics',
+        Stastics: 'Data Summary',
         Intelligent: 'Intelligent Q&A',
     },
     file:{
