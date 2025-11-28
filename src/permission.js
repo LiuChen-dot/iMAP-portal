@@ -37,6 +37,26 @@ NProgress.configure({
 
 const whiteList = ['/login', '/auth-redirect', '/bind', '/register'];
 
+// 定义门户功能页面，允许匿名访问
+const portalPages = [
+  '/Search',
+  '/16S',
+  '/KnowledgeGraph',
+  '/GenomeBrowser',
+  '/MetagenomicAnalysis',
+  '/Stastics',
+  '/IntelligentQ&A',
+  '/index',
+  '/',
+  '/gene',
+  '/protein',
+  '/rna',
+  '/disease',
+  '/basic_information',
+  '/small_molecule',
+  '/go'
+];
+
 router.beforeEach((to, from, next) => {
   NProgress.start()
   console.log(to)
@@ -45,6 +65,7 @@ router.beforeEach((to, from, next) => {
     next('')
     return;
   }
+  
   if (getToken()) {
     to.meta.title && useSettingsStore().setTitle(to.meta.title)
     /* has token*/
@@ -70,35 +91,38 @@ router.beforeEach((to, from, next) => {
               replace: true
             }) // hack方法 确保addRoutes已完成
           })
-          // }).catch(err => {
-          //   useUserStore().logOut().then(() => {
-          //     ElMessage.error(err)
-          //     next({ path: '/' })
-          //   })
         })
       } else {
         next()
       }
     }
   } else {
-    if (to.path == '/Search'||to.path == '/16S' || to.path=='/KnowledgeGraph'|| to.path=='/GenomeBrowser'|| to.path=='/MetagenomicAnalysis'|| to.path=='/Stastics'|| to.path=='/IntelligentQ&A') {
-      ElMessage.warning(getI18nMessage('permission.pleaseLogin'))
-      next('')
-    } else {
+    // 没有token的情况
+    if (whiteList.indexOf(to.path) !== -1) {
+      // 在免登录白名单，直接进入
+      next()
+    } else if (portalPages.some(page => to.path.startsWith(page))) {
+      // 如果是门户功能页面，允许匿名访问，但不加载用户路由
       usePermissionStore().generateRoutes().then(accessRoutes => {
+        // 只保留公共路由（如首页、搜索等门户功能）
+        const publicRoutes = accessRoutes.filter(route => 
+          portalPages.some(page => route.path.startsWith(page) || route.path === '/' || route.path === '/index')
+        );
+        
+        // 动态添加公共路由
+        publicRoutes.forEach(route => {
+          if (!isHttp(route.path)) {
+            router.addRoute(route)
+          }
+        })
+        
         next()
       })
+    } else {
+      // 非门户功能页面，重定向到登录
+      next(`/login?redirect=${encodeURIComponent(to.fullPath)}`)
+      NProgress.done()
     }
-
-
-    // // 没有token
-    // if (whiteList.indexOf(to.path) !== -1) {
-    //   // 在免登录白名单，直接进入
-    //   next()
-    // } else {
-    //   next(`/login?redirect=/KnowledgeQuery`) // 否则全部重定向到登录页
-    //   NProgress.done()
-    // }
   }
 
 })

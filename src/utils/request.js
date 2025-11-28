@@ -92,7 +92,9 @@ service.interceptors.response.use(res => {
       return Promise.resolve(res)
     }
     else if (code === 401) {
-      // if (!isRelogin.show) {
+      // 允许匿名访问，401错误不强制登录，仅提示用户
+      // 如果用户已登录但token过期，可以选择重新登录
+      if (getToken() && !isRelogin.show) {
         isRelogin.show = true;
         ElMessageBox.confirm('登录状态已过期，您可以继续留在该页面，或者重新登录', '系统提示', {
           confirmButtonText: '重新登录',
@@ -106,8 +108,9 @@ service.interceptors.response.use(res => {
         }).catch(() => {
           isRelogin.show = false;
         });
-      // }
-      return Promise.reject('无效的会话，或者会话已过期，请重新登录。')
+      }
+      // 允许继续访问，不阻止请求
+      return Promise.resolve(res.data)
     } else 
     if (code === 500) {
       ElMessage({

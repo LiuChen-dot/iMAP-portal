@@ -86,16 +86,6 @@
           </div>
           <div>→</div>
         </div>
-        <div @click="routers.push('/16S')">
-          <div><img :src="modulebox3" />{{i18n=='en'?'16S rRNA gene sequencing':'16S 测序分析'}}</div>
-          <div v-if="i18n=='zh'">
-            16S rRNA基因测序技术是一种广泛应用于微生物组研究的高通量测序方法，主要用于解析细菌和古菌群落的组成特征与多样性。该技术基于微生物16S rRNA基因中保守区与高变区并存的特点，通过特异性扩增可变区域（如V3-V4区）实现微生物种类鉴定。
-          </div>
-          <div v-else>
-            16S rRNA gene sequencing is a high-throughput sequencing method widely used in microbiome research, primarily for analyzing the composition and diversity of bacterial and archaeal communities. This technique leverages the characteristic structure of the microbial 16S rRNA gene, which contains both conserved regions and hypervariable regions. By specifically amplifying these variable regions (e.g., V3-V4 regions), it enables accurate microbial taxonomic identification.
-          </div>
-          <div>→</div>
-        </div>
         <div @click="routers.push('/GenomeBrowser')">
           <div><img :src="modulebox4" />{{i18n=='en'?'Genome Browser':'基因组浏览器'}}</div>
           <div v-if="i18n=='zh'">
@@ -103,6 +93,16 @@
           </div>
           <div v-else>
             The Genome Browser (Gene Browser) is an indispensable visualization and analysis tool in bioinformatics research, enabling interactive exploration of specific genomic regions and their annotation information. By integrating multi-source genomic data, this tool empowers researchers to conduct in-depth analysis of genomic structure and functional features, playing a pivotal role in new gene discovery, regulatory element identification, and gene-disease association studies. Its core functionalities include: whole-genome sequence navigation (covering genes, transcripts, SNPs, CpG islands, etc.), multi-dimensional annotation display (integrating known genes, predicted genes, ESTs and other data), and providing comprehensive solutions for genomic data analysis across various research scenarios.
+          </div>
+          <div>→</div>
+        </div>
+        <div @click="routers.push('/16S')">
+          <div><img :src="modulebox3" />{{i18n=='en'?'16S rRNA gene sequencing':'16S 测序分析'}}</div>
+          <div v-if="i18n=='zh'">
+            16S rRNA基因测序技术是一种广泛应用于微生物组研究的高通量测序方法，主要用于解析细菌和古菌群落的组成特征与多样性。该技术基于微生物16S rRNA基因中保守区与高变区并存的特点，通过特异性扩增可变区域（如V3-V4区）实现微生物种类鉴定。
+          </div>
+          <div v-else>
+            16S rRNA gene sequencing is a high-throughput sequencing method widely used in microbiome research, primarily for analyzing the composition and diversity of bacterial and archaeal communities. This technique leverages the characteristic structure of the microbial 16S rRNA gene, which contains both conserved regions and hypervariable regions. By specifically amplifying these variable regions (e.g., V3-V4 regions), it enables accurate microbial taxonomic identification.
           </div>
           <div>→</div>
         </div>
