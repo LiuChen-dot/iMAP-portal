@@ -15,7 +15,7 @@ export default {
         // Blast: '局部比对搜索工具',
         Blast: '局部对比工具',
         sixteenS: '生信分析',
-        sixteenS16s: '16S分析',
+        sixteenS16s: '16S测序分析',
         sixteenSMA: '宏基因组',
         Stastics: '数据总览',
         Intelligent: '智能问答',

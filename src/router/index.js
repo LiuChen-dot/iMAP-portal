@@ -111,24 +111,26 @@ export const constantRoutes = [{
 //     },
 //   }]
 // },
-{
-  component: Layout,
-  isTop: true,
-  meta: {
-    title: "sixteenS",
-    icon: "menu5",
-    affix: true,
-  },
-  children: [{
-    path: "/16S",
-    component: () => import("@/views/16S/index"),
-    name: "16S",
-    meta: {
-      title: "sixteenS16s",
-      icon: "menu5",
-      affix: true,
-    },
-  },
+// 附带二级选项框的16S功能
+//{
+//  component: Layout,
+//  isTop: true,
+//  meta: {
+//    title: "sixteenS",
+//    icon: "menu5",
+//    affix: true,
+//  },
+//  children: [{
+//    path: "/16S",
+//    component: () => import("@/views/16S/index"),
+//    name: "16S",
+//    meta: {
+//      title: "sixteenS16s",
+//      icon: "menu5",
+//      affix: true,
+//    },
+//  },
+
   // {
   //   path: "/MetagenomicAnalysis",
   //   component: () => import("@/views/16S/Analysis"),
@@ -139,8 +141,23 @@ export const constantRoutes = [{
   //     affix: true,
   //   },
   // }
-  ]
-},
+//  ]
+//},
+ // 不附带二级页面的16S功能
+{
+    path: '',
+    component: Layout,
+    children: [{
+      path: "/16S",
+      component: () => import("@/views/16S/index"),
+      name: "16S",
+      meta: {
+        title: "sixteenS16s",
+        icon: "menu4",
+        affix: true,
+      },
+    }]
+ },
 {
   path: '',
   component: Layout,
@@ -167,11 +184,11 @@ export const constantRoutes = [{
   path: '',
   component: Layout,
   children: [{
-    path: "/Stastics",
-    component: () => import("@/views/Stastics/index"),
-    name: "Stastics",
+    path: "/IntelligentQ&A",
+    component: () => import("@/views/IntelligentQ&A/index"),
+    name: "IntelligentQ&A",
     meta: {
-      title: "Stastics",
+      title: "Intelligent",
       icon: "menu6",
       affix: true,
     },
@@ -181,11 +198,11 @@ export const constantRoutes = [{
   path: '',
   component: Layout,
   children: [{
-    path: "/IntelligentQ&A",
-    component: () => import("@/views/IntelligentQ&A/index"),
-    name: "IntelligentQ&A",
+    path: "/Stastics",
+    component: () => import("@/views/Stastics/index"),
+    name: "Stastics",
     meta: {
-      title: "Intelligent",
+      title: "Stastics",
       icon: "menu6",
       affix: true,
     },
