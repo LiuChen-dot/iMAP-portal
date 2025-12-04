@@ -77,6 +77,9 @@ const listLoading = ref(false)
 
 const isMounted = ref(false)
 
+// 存储每个数据类型的匹配层级限制
+const dataTypeMatchLevelMap = ref({})
+
 
 //获取树形结构跳转查询参数
 const dataTypeAndTaxonomySpecies = ref('')
@@ -89,7 +92,7 @@ if (sessionStorage.getItem('speciesTaxId')) {
 }
 
 const getsearchAggregationFun = (type, searchtype) => {
-  getsearchAggregation({
+  return getsearchAggregation({
     "baseDataType": route.query.type,
     "keyword": searchValue.value,
     dataTypeAndTaxonomySpecies: dataTypeAndTaxonomySpecies.value,
@@ -103,6 +106,21 @@ const getsearchAggregationFun = (type, searchtype) => {
     //   showName: "All"
     // }], ...res.data.dataTypeAndDataSize]
     typeList.value = res.data.dataTypeAndDataSize
+    
+    // 保存每个数据类型的匹配层级限制
+    if (res.data.dataTypeMatchLevelMap) {
+      dataTypeMatchLevelMap.value = res.data.dataTypeMatchLevelMap
+    } else {
+      // 如果没有返回层级映射，从dataTypeAndDataSize中提取
+      const levelMap = {}
+      res.data.dataTypeAndDataSize.forEach((item) => {
+        if (item.baseDataType) {
+          levelMap[item.baseDataType] = item.matchLevel || 0
+        }
+      })
+      dataTypeMatchLevelMap.value = levelMap
+    }
+    
     if (searchtype == 'list') {
       res.data.dataTypeAndDataSize.forEach((item) => {
         if (item.baseDataType == type) {
@@ -123,12 +141,31 @@ const getsearchAggregationFun = (type, searchtype) => {
 
 const searchByPageFun = () => {
   listLoading.value = true
-  searchByPage(pageNum.value, pageSize.value, {
+  
+  // 根据当前查询的数据类型，获取对应的层级限制
+  let maxMatchLevel = null
+  if (listValue.value && dataTypeMatchLevelMap.value[listValue.value] !== undefined) {
+    maxMatchLevel = dataTypeMatchLevelMap.value[listValue.value]
+    // 如果层级为0，表示没有匹配到数据，直接返回空结果
+    if (maxMatchLevel === 0) {
+      listLoading.value = false
+      return
+    }
+  }
+  
+  const searchParams = {
     "baseDataType": listValue.value || null,
     "keyword": searchValue.value || null,
     dataTypeAndTaxonomySpecies: dataTypeAndTaxonomySpecies.value,
     speciesTaxId: speciesTaxId.value
-  }).then(res => {
+  }
+  
+  // 如果有层级限制，添加到查询参数中
+  if (maxMatchLevel !== null) {
+    searchParams.maxMatchLevel = maxMatchLevel
+  }
+  
+  searchByPage(pageNum.value, pageSize.value, searchParams).then(res => {
 
     var arr = []
     res.data.dataList.forEach(item => {
@@ -186,6 +223,12 @@ const capitalizeFirstLetter = (string) => {
   });
 }
 const load = () => {
+  // 检查是否已经加载完所有数据
+  // 如果当前列表数量已经达到或超过聚合查询返回的总数，就不再加载
+  if (dataSize.value > 0 && seachList.value.length >= dataSize.value) {
+    console.log('已加载完所有数据，不再加载更多')
+    return
+  }
   pageNum.value++
   searchByPageFun()
 }
@@ -193,9 +236,11 @@ const load = () => {
 onMounted(() => {
   console.log(route.query);
 
-  searchByPageFun()
   isMounted.value = true
-  getsearchAggregationFun(route.query.type || '', route.query.type ? 'list' : '')
+  // 先执行聚合查询，完成后再执行分页查询
+  getsearchAggregationFun(route.query.type || '', route.query.type ? 'list' : '').then(() => {
+    searchByPageFun()
+  })
 })
 
 const typeClick = (val, ind) => {
@@ -205,6 +250,10 @@ const typeClick = (val, ind) => {
   if (listValue.value != "taxonomy") {
     pageNum.value = 1
     seachList.value = []
+    // 如果该类型的数据量为0，不需要查询
+    if (val.dataCount === 0) {
+      return
+    }
     searchByPageFun()
   }
 }
@@ -214,8 +263,10 @@ watch(() => route.query.value, (newQuery, oldQuery) => {
   pageNum.value = 1
   seachList.value = []
   searchValue.value = newQuery
-  searchByPageFun()
-  getsearchAggregationFun('', 'search')
+  // 先执行聚合查询，完成后再执行分页查询
+  getsearchAggregationFun('', 'search').then(() => {
+    searchByPageFun()
+  })
 });
 // 详情页
 const detailBtn = (val) => {
