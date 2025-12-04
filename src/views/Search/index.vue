@@ -14,8 +14,15 @@
         <div class="list_header">
           <el-breadcrumb>
             <el-breadcrumb-item>
-              <div class="Searchtitle">Search Results for <span style="color: var(--el-theme-color);">{{ searchValue
-                  }}</span></div>
+              <div class="Searchtitle">
+                <span v-if="searchLoading">
+                  Searching "<span style="color: var(--el-theme-color);">{{ searchValue }}</span>" , please wait...
+                </span>
+                <span v-else>
+                  Found <span style="color: var(--el-theme-color);">{{ dataSize }}</span> results for
+                  "<span style="color: var(--el-theme-color);">{{ searchValue }}</span>"
+                </span>
+              </div>
             </el-breadcrumb-item>
           </el-breadcrumb>
 
@@ -31,7 +38,7 @@
               </div>
 
             </div>
-            <p class="contentTitle">{{ dataSize }} records from All databases.</p>
+            <p class="contentTitle">{{ dataSize }} records</p>
           </div>
           <template v-if="isMounted">
             <div class="list_rig" v-infinite-scroll="load" :infinite-scroll-immediate="false" v-loading='listLoading'>
@@ -63,6 +70,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { searchByPage, getsearchAggregation } from '@/api/data.js'
 import treeChart from '@/views/treeChart/treeChart/App'
 import bac from '@/assets/images/search/bac.png'
+const searchLoading = ref(false)
 const seachList = ref([])
 const typeList = ref([])
 const dataSize = ref(0)
@@ -165,7 +173,7 @@ const searchByPageFun = () => {
     searchParams.maxMatchLevel = maxMatchLevel
   }
   
-  searchByPage(pageNum.value, pageSize.value, searchParams).then(res => {
+  return searchByPage(pageNum.value, pageSize.value, searchParams).then(res => {
 
     var arr = []
     res.data.dataList.forEach(item => {
@@ -238,8 +246,11 @@ onMounted(() => {
 
   isMounted.value = true
   // 先执行聚合查询，完成后再执行分页查询
+  searchLoading.value = true
   getsearchAggregationFun(route.query.type || '', route.query.type ? 'list' : '').then(() => {
-    searchByPageFun()
+    return searchByPageFun()
+  }).finally(() => {
+    searchLoading.value = false
   })
 })
 
@@ -254,7 +265,10 @@ const typeClick = (val, ind) => {
     if (val.dataCount === 0) {
       return
     }
-    searchByPageFun()
+    searchLoading.value = true
+    searchByPageFun().finally(() => {
+      searchLoading.value = false
+    })
   }
 }
 
@@ -264,8 +278,11 @@ watch(() => route.query.value, (newQuery, oldQuery) => {
   seachList.value = []
   searchValue.value = newQuery
   // 先执行聚合查询，完成后再执行分页查询
+  searchLoading.value = true
   getsearchAggregationFun('', 'search').then(() => {
-    searchByPageFun()
+    return searchByPageFun()
+  }).finally(() => {
+    searchLoading.value = false
   })
 });
 // 详情页

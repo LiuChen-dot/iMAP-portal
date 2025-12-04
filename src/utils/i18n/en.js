@@ -58,7 +58,7 @@ export default {
         searchtitle: 'Intelligent Microbial Application Platform (iMAP)',
         rmss: 'HotSearch',
         jz: 'Value',
-        yj: 'Vission and Mission',
+        yj: 'Vision and Mission',
         lxwm: 'Contact us',
         gsmc: 'Shanghai Lishan Bio-Pharmaceutical Co., Ltd.',
         gw: 'Web：www.lishan.ltd',
