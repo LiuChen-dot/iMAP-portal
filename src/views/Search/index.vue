@@ -136,11 +136,13 @@ const getsearchAggregationFun = (type, searchtype) => {
         }
       })
     } else if (searchtype == 'search') {
-      res.data.dataTypeAndDataSize.forEach((item) => {
-        if (item.baseDataType == listValue.value) {
-          dataSize.value = item.dataCount
-        }
-      })
+      const match = res.data.dataTypeAndDataSize.find((item) => item.baseDataType == listValue.value)
+      if (match) {
+        dataSize.value = match.dataCount
+      } else {
+        // 无匹配类型时回退为总数，避免沿用上一次搜索的数值
+        dataSize.value = res.data.dataSize
+      }
     } else {
       dataSize.value = res.data.dataSize
     }

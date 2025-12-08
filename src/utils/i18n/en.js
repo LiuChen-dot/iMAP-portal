@@ -13,7 +13,7 @@ export default {
         GenomeBrowser: 'Genome Browser',
         Blast: 'Blast',
         sixteenS: 'Sequencing Analysis',
-        sixteenS16s: '16S rRNA sequencing analysis',
+        sixteenS16s: '16S rRNA Sequencing Analysis',
         sixteenSMA: 'Metagenomic Analysis',
         Stastics: 'Data Summary',
         Intelligent: 'Intelligent Q&A',
