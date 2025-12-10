@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="app-container" style="height: calc(100% - 180px); overflow: auto;">
     <div class="home">
         <div class="home_List">
             <div class="list_header mar-b-10">

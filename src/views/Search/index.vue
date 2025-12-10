@@ -1,5 +1,5 @@
 <template>
-  <div :class="['app-container', listValue == 'taxonomy' ? 'ov-h' : '']" @scroll="handleScroll">
+  <div :class="['app-container', listValue == 'taxonomy' ? 'ov-h' : '']" @scroll="handleScroll"  style="height: calc(100% - 180px); overflow: auto;">
     <el-card :class="[listValue == 'taxonomy' ? 'cardCont' : '']" style="border: none;">
       <!-- 搜索框 -->
       <div class="mar-t-30" style="position: relative;z-index: 998;">

@@ -1,5 +1,5 @@
 <template>
-    <div class="app-container">
+    <div class="app-container" style="height: calc(100% - 180px); overflow: auto;">
         <div style="margin:0 auto;max-width: 1320px;" >
 			<div class="pad-l-15 mar-t-15 mar-b-10 fts-18 text-w-800" style="color:#333;" >Entities</div>
 			<div class="dis-flex flex-w just-c-sb">

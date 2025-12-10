@@ -4,7 +4,7 @@
             <div v-show="active == 0">
                 <el-form ref="loginFormref" :model="loginForm" :rules="loginFormrules">
                     <el-form-item label="" prop="username">
-                        <el-input  v-model="loginForm.username" :placeholder="i18n=='zh'?'请输入手机号':'Please enter your phone number'" >
+                        <el-input  v-model="loginForm.username" :placeholder="i18n=='zh'?'请输入账号':'Please enter your phone number'" >
                             <template #prefix>
                                 <img src="@/assets/images/phone.png" alt="" width="15">
                             </template>

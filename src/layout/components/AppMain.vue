@@ -28,6 +28,7 @@ const tagsViewStore = useTagsViewStore();
 .app-main {
   /* 50= navbar  50  */
   // min-height: calc(100vh - 50px);
+  // min-height: calc(100vh - 84px);
   flex: 1;
   width: 100%;
   position: relative;

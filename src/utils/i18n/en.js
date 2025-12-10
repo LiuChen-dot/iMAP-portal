@@ -66,7 +66,10 @@ export default {
         email: "Email：lishan{'@'}lishan.ltd",
         value: 'Brilliant Insights, Strive for Perfection',
         vandm1: 'Continue to develop and innovate in the biopharmaceutical industry',
-        vandm2: 'Safeguard human health; Become the global leader in AI biopharmaceuticals.'
+        vandm2: 'Safeguard human health; Become the global leader in AI biopharmaceuticals.',
+        copyright: 'Copyright©2025 Shanghai Lishan Biopharmaceutical Co., Ltd.',
+        icpfull: 'Shanghai ICP 2023015269-2',
+        psbfull: 'Shanghai Public Network Anbei 31011502019930'
     },
     sixteensHome: {
         ztjs: 'Description：',

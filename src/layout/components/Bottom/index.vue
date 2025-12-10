@@ -2,7 +2,7 @@
   <div class="footer_page">
     <div class="footer">
       <div class="icon_list">
-        <div>
+        <div style="cursor: pointer;" @click="gotogw">
           <img src="../../../assets/logo/logo1.png" alt="">
         </div>
       </div>
@@ -27,12 +27,39 @@
         <li>{{ $t("message.email") }}</li>
       </ul>
     </div>
+    <div class="filing-bar">
+      <a class="filing-link" :href="links.copyright" target="_blank" rel="noopener">
+        {{ $t('message.copyright') }}
+      </a>
+      <a class="filing-link" :href="links.icp" target="_blank" rel="noopener">
+        <img src="../../../assets/logo/ICP-Filing.png" alt="ICP备案图标" />
+        {{ $t('message.icpfull') }}
+      </a>
+      <a
+        v-if="showPsb"
+        class="filing-link"
+        :href="links.psb"
+        target="_blank"
+        rel="noopener"
+      >
+        <img src="../../../assets/logo/PSB-Filing.png" alt="公网安备图标" />
+        {{ $t('message.psbfull') }}
+      </a>
+    </div>
   </div>
 </template>
 
 <script setup>
 const gotogw = ()=>{
   window.open('https://www.lishan.ltd/')
+}
+
+
+const showPsb = false
+const links = {
+  copyright: 'https://www.lishan.ltd/',
+  icp: 'https://beian.miit.gov.cn/',
+  psb: 'https://www.beian.gov.cn/portal/registerSystemInfo?recordcode=31011502019930'
 }
 </script>
 
@@ -41,7 +68,7 @@ const gotogw = ()=>{
 
 .footer_page {
   width: 100%;
-  height: 150px;
+  min-height: 180px;
   padding: 20px 100px 0;
   position: absolute;
   background: var(--footerbg);
@@ -97,6 +124,36 @@ const gotogw = ()=>{
     img {
       width: 150px;
       // height: 60px;
+    }
+  }
+
+  .filing-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 12px 0 16px;
+    margin-top: 12px;
+    font-size: 12px;
+    color: #cfd3dc;
+    border-top: 1px solid var(--ccc);
+
+    .filing-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: inherit;
+      text-decoration: none;
+
+      &:hover {
+        color: #ffffff;
+        text-decoration: underline;
+      }
+
+      img {
+        height: 18px;
+        width: auto;
+      }
     }
   }
 }

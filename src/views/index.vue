@@ -27,7 +27,7 @@
           <div>{{ activename == 'basic_information' ? 'Microbe' : activename }}</div>
 
           <div>
-            <div v-if="i18n=='en'"> 
+            <div v-if="i18n=='en'">
               <template v-if="activename == 'Microbe'">
                 As of {{ timeEn }}, this platform has indexed a total of {{ activecount }} {{activename}}-related data entries, and will continue to expand the data within the platform in the future.
               </template>
@@ -66,7 +66,7 @@
       </template>
       <div class="floortitle">{{i18n=='zh'?'AI+多模态数据融合，一站式科研解决方案':'AI-Driven Multimodal Data Integration, End-to-End Scientific Workflow Platform'}}</div>
       <div class="content">
-        <div>
+        <div @click="scrollToTop">
           <div><img :src="modulebox1" />{{i18n=='en'?'Knowledge Search':'知识检索'}}</div>
           <div v-if="i18n=='zh'">
             知识检索作为平台的核心组成部分，整合了全面的微生物学数据资源，包括基因组序列、功能注释、生态特征及实际应用案例等关键信息。通过智能化的多维度检索和筛选系统，研究人员可快速定位目标数据，为实验方案设计和菌种选择提供精准的决策支持。本模块持续跟踪学科前沿动态，确保所有数据资源与最新研究进展同步更新。
@@ -204,9 +204,9 @@ const getsearchAggregationFun = () => {
     typeList.value.forEach(item => {
       item.imgurl = contentbacimgs[item.baseDataType]
     })
-    
+
   })
-  
+
 }
 
 getsearchAggregationFun()
@@ -236,6 +236,15 @@ const changeList = (item, index) => {
 
 const gotogw = (url) => {
   url ? window.open(url) : ''
+}
+
+const scrollToTop = () => {
+
+  console.log("scrollToTop")
+    // 先尝试标准方式
+    if (window.scrollTo) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 }
 </script>
 

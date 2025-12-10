@@ -68,7 +68,10 @@ export default {
         email: "电子邮箱：lishan{'@'}lishan.ltd",
         value: '卓见著微 臻于至善',
         vandm1: '持续为生物药业行业开发创新',
-        vandm2: '守护人类健康 成为全球AI生物医药领军企业'
+        vandm2: '守护人类健康 成为全球AI生物医药领军企业',
+        copyright: '版权所有©2025 上海力山生物医药有限公司',
+        icpfull: '沪ICP备2023015269号-2',
+        psbfull: '沪公网安备31011502019930号'
     },
     sixteensHome: {
         ztjs: '整体介绍：',
