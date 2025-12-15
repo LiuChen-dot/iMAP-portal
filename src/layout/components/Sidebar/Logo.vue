@@ -52,15 +52,13 @@ const sideTheme = computed(() => settingsStore.sideTheme);
   overflow: hidden;
   padding: 0 13px;
 
-  & .sidebar-logo-link {
-    height: 100%;
-    width: 100%;
-    & .sidebar-logo {
-      width: 80px;
-      // height: 20px;
-      vertical-align: middle;
-      margin-right: 12px;
-    }
+  & .sidebar-logo {
+    height: 80%; // 占容器高度的80%
+    width: auto;
+    max-height: 40px;
+    object-fit: contain;
+    vertical-align: middle;
+  }
 
     & .sidebar-title {
       display: inline-block;

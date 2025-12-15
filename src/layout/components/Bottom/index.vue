@@ -16,7 +16,9 @@
         <div class="title">{{ $t("message.yj") }} </div>
         <div class="cont">
           <p>{{ $t("message.vandm1") }}</p>
+          <!--
           <p>{{ $t("message.vandm2") }}</p>
+          -->
         </div>
       </div>
       <ul>
