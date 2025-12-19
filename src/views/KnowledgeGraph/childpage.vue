@@ -148,7 +148,11 @@ const detailBtn = () => {
         sessionStorage.setItem('small_molecule_id', showData.value.id)
         sessionStorage.setItem('zw1Type', showData.value.type)
         window.open('/small_molecule', '_blank')
-    }
+    } else if (showitem.value.type.toLowerCase() == 'go_terms') {
+          sessionStorage.setItem('go_terms_id', showitem.value.id)
+          sessionStorage.setItem('zwType', showitem.value.type.toLowerCase())
+          window.open('/go_terms', '_blank')
+        }
 };
 </script>
 

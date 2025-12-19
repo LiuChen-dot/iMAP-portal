@@ -80,13 +80,14 @@ function init() {
 }
 
 const detailBtn = () => {
+
   if (showitem.value.type == 'Protein') {
     sessionStorage.setItem('protein_id', showitem.value.id)
-    sessionStorage.setItem('zwType', showitem.value.type)
+    sessionStorage.setItem('zwType', showitem.value.type.toLowerCase())
     window.open('/protein', '_blank')
   } else if (showitem.value.type == 'Gene') {
     sessionStorage.setItem('gene_id', showitem.value.id)
-    sessionStorage.setItem('zw1Type', showitem.value.type)
+    sessionStorage.setItem('zw1Type', showitem.value.type.toLowerCase())
     window.open('/gene', '_blank')
   } else if (showitem.value.type == 'RNA') {
     sessionStorage.setItem('rna_id', showitem.value.id)
@@ -104,9 +105,9 @@ const detailBtn = () => {
     sessionStorage.setItem('small_molecule_id', showitem.value.id)
     sessionStorage.setItem('zw1Type', showitem.value.type)
     window.open('/small_molecule', '_blank')
-  }else if (showitem.value.type == 'go_terms') {
+  }else if (showitem.value.type.toLowerCase() == 'go_terms') {
     sessionStorage.setItem('go_terms_id', showitem.value.id)
-    sessionStorage.setItem('zwType', showitem.value.type)
+    sessionStorage.setItem('zwType', showitem.value.type.toLowerCase())
     window.open('/go_terms', '_blank')
   }
 };
@@ -192,8 +193,8 @@ watch(() => props.GraphList, (item) => {
             text.setAttribute('font-size', '12');
             text.setAttribute('fill', 'black');
             item.parentNode.appendChild(text);
-            text.addEventListener('contextmenu', (event) => { showDialog(event, nodeitem) })
-            item.addEventListener('contextmenu', (event) => { showDialog(event, nodeitem) })
+            text.addEventListener('click', (event) => { showDialog(event, nodeitem) })
+            item.addEventListener('click', (event) => { showDialog(event, nodeitem) })
           }
         })
       }

@@ -9,7 +9,6 @@
                 <span class="fts-12">{{ i18n=='zh'?'查询类型':'QueryType' }}：</span>
                 <el-select v-model="queryType"  class="fl-1" 
                   @change="queryTypeChange">
-                  <!-- @change="(queryType=='2'||queryType=='3')&&(fromType!='1'&&fromType!='2')?fromType='1':'';(queryType=='2'||queryType=='3')&&(toType!='5'&&toType!='6')?toType='5':''"> -->
                   <el-option label="Adjacent" value="1"></el-option>
                   <el-option label="keyword-to-category" value="2"></el-option>
                   <el-option label="keyword-to-keyword" value="3"></el-option>
@@ -30,13 +29,14 @@
                   </template>
                 </el-autocomplete>
               </div>
-              <div class="w-100p dis-flex align-c">
+              <!-- 以下是需要控制显示/隐藏的尾实体和关键字输入框 -->
+              <div class="w-100p dis-flex align-c" v-if="queryType !== '1'">
                 <span class="fts-12">{{ i18n=='zh'?'尾实体':'To' }}：</span>
                 <el-select v-model="toType"  class="fl-1">
                   <el-option :label="item.name" :value="item.id" v-for="item in toTypeList" :key="item.id"></el-option>
                 </el-select>
               </div>
-              <div class="w-100p dis-flex align-c">
+              <div class="w-100p dis-flex align-c" v-if="queryType !== '1'">
                 <span class="fts-12">{{ i18n=='zh'?'关键字':'Keyword' }}：</span>
                 <el-autocomplete v-model="SearchValue1" @select="selectAutocomplete1"  :fetch-suggestions="querySearch1"
                   clearable  class="fl-1">
@@ -52,16 +52,6 @@
               <div class="w-100p dis-flex align-c">
                 <el-button type="primary" @click="SearchFun">{{ i18n=='zh'?'查询':'Query' }}</el-button>
               </div>
-              <!-- <div class="w-100p dis-flex align-c">
-                <el-autocomplete v-model="SearchValue" @select="selectAutocomplete" :fetch-suggestions="querySearch"
-                  :disabled="!SelectValue" clearable placeholder="请输入关键词">
-                  <template v-slot="{ item }">
-                    <div v-html="item.search_content"></div>
-                  </template>
-                </el-autocomplete>
-              </div> -->
-              <!-- <el-input v-model="SearchValue" size="small"></el-input>
-              <el-button @click="Search" size="small">搜索</el-button> -->
             </div>
             <div class="list_left_floor">
               <div v-for="item in colorList" :key="item.name">
@@ -72,20 +62,12 @@
           </div>
         </div>
         <div class="list_rig">
-          <!-- <childpage  :GraphList="GraphList"></childpage> -->
           <neo4j ref="neo4jref" :GraphList="GraphList" :loading="loading"></neo4j>
-          <!-- * Rfam图表元素 * -->
-          <!-- <div id="svgContainer"></div>
-          <div style="position: absolute;padding: 10px 20px;background-color: #04A983;font-size: 12px;color: white;"
-            v-show="text" id="dialogbox">{{ text }}</div> -->
-          <!-- * Rfam图表元素 * -->
         </div>
       </div>
     </div>
-
     <Bottom style="position: relative;"></Bottom>
   </div>
-
 </template>
 
 <script setup>

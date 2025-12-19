@@ -73,10 +73,19 @@ const links = {
   min-height: 180px;
   padding: 20px 100px 0;
   position: absolute;
-  background: var(--footerbg);
-  box-shadow: 0px 0px 12px var(--boxshadow);
   border-top: 1px solid var(--ccc);
-  color: white;
+
+  // 搭配1 浅色+黑色字体
+  // background-color: #EBFFFB;
+  // background-color: #e2f8fc;
+  // box-shadow: 0px 0px 12px var(--boxshadow);
+  // color: #4D4D4D;
+
+  // 搭配2 深色+浅色字体
+  background-color: #2E5939;
+  // 2E5939 墨绿 // 264B82 蓝色
+  box-shadow: 0px 0px 12px var(--boxshadow);
+  color: #cfd3dc;
 
   .footer {
     display: flex;
@@ -137,7 +146,9 @@ const links = {
     padding: 12px 0 16px;
     margin-top: 12px;
     font-size: 12px;
-    color: #cfd3dc;
+
+    color: #cfd3dc; // 灰色字体
+    // color: #4D4D4D; // 深色字体
     border-top: 1px solid var(--ccc);
 
     .filing-link {
