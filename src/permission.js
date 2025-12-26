@@ -82,7 +82,10 @@ router.beforeEach((to, from, next) => {
     }
   } else {
     if (to.path == '/16S' || to.path=='/KnowledgeGraph'){
-      ElMessage.warning(getI18nMessage('permission.pleaseLogin'))
+      ElMessage.warning({
+            message: getI18nMessage('permission.pleaseLogin'),
+            offset: 60  // 向下偏移60px，你可以根据需要调整这个数值
+        })
       next('')
     } else {
       usePermissionStore().generateRoutes().then(accessRoutes => {

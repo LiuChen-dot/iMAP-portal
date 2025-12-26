@@ -196,7 +196,7 @@ const searchByPageFun = () => {
       }
       if (item.dataType == 'disease') {
         obj.id = item.disease_lishan_id
-        obj.name = item.Disease_name
+        obj.name = item.disease_name
       }
       if (item.dataType == 'small_molecule') {
         obj.name = item.chebi_name

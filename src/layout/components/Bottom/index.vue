@@ -7,18 +7,15 @@
         </div>
       </div>
       <div>
-        <div class="title">{{ $t("message.jz") }} </div>
+        <div class="title placeholder-title"></div>
         <div class="cont">
-          <p>{{ $t("message.value") }}</p>
+          <p>{{ $t("message.value1") }}</p>
+          <p>{{ $t("message.value2") }}</p>
         </div>
       </div>
       <div>
-        <div class="title">{{ $t("message.yj") }} </div>
+        <div class="title"></div>
         <div class="cont">
-          <p>{{ $t("message.vandm1") }}</p>
-          <!--
-          <p>{{ $t("message.vandm2") }}</p>
-          -->
         </div>
       </div>
       <ul>
@@ -68,6 +65,10 @@ const links = {
 <style lang="scss" scoped>
 @import '../../../assets/styles/variables.module.scss';
 
+.placeholder-title {
+  height: 30px; // 与原来title的高度一致
+  visibility: hidden; // 隐藏但占据空间
+}
 .footer_page {
   width: 100%;
   min-height: 180px;

@@ -87,7 +87,7 @@
           <div>→</div>
         </div>
         <div @click="routers.push('/GenomeBrowser')">
-          <div><img :src="modulebox4" />{{i18n=='en'?'Genome Browser':'基因组浏览器'}}</div>
+          <div><img :src="modulebox3" />{{i18n=='en'?'Genome Browser':'基因组浏览器'}}</div>
           <div v-if="i18n=='zh'">
             基因组浏览器是生物信息学研究中不可或缺的可视化分析工具，能够实现对基因组特定区域及其注释信息的交互式探索。该工具通过整合多源基因组数据，支持研究人员深入解析基因组结构与功能特征，在新基因发现、调控元件鉴定以及基因-疾病关联研究等领域发挥关键作用。其核心功能包括：基因组全序列导航（涵盖基因、转录本、SNP、CpG岛等要素）、多维度注释信息展示（整合已知基因、预测基因及EST等数据）、为不同研究场景下的基因组数据分析提供全面解决方案。
           </div>
@@ -97,7 +97,7 @@
           <div>→</div>
         </div>
         <div @click="routers.push('/16S')">
-          <div><img :src="modulebox3" />{{i18n=='en'?'16S rRNA gene sequencing':'16S 测序分析'}}</div>
+          <div><img :src="modulebox4" />{{i18n=='en'?'16S rRNA gene sequencing':'16S 测序分析'}}</div>
           <div v-if="i18n=='zh'">
             16S rRNA基因测序技术是一种广泛应用于微生物组研究的高通量测序方法，主要用于解析细菌和古菌群落的组成特征与多样性。该技术基于微生物16S rRNA基因中保守区与高变区并存的特点，通过特异性扩增可变区域（如V3-V4区）实现微生物种类鉴定。
           </div>
@@ -107,7 +107,7 @@
           <div>→</div>
         </div>
         <div @click="routers.push('/IntelligentQ&A')">
-          <div><img :src="modulebox4" />{{i18n=='en'?'Intelligent Q&A System':'智能问答'}}</div>
+          <div><img :src="modulebox5" />{{i18n=='en'?'Intelligent Q&A System':'智能问答'}}</div>
           <div v-if="i18n=='zh'">
             智能问答系统突破传统数据库查询的格式限制，通过融合大语言模型（LLM）与知识图谱检索增强生成（RAG）技术，实现了肠道微生物领域的自然语言交互式知识获取。该系统支持研究人员使用日常语言自由提问，智能解析问题意图并整合多源知识生成精准回答，将信息检索效率提升80%以上，显著加速了从菌株特性查询到组学数据分析等各类科研场景的工作进程。
           </div>
@@ -168,6 +168,7 @@ import modulebox1 from '@/assets/images/home/modulebox1.svg'
 import modulebox2 from '@/assets/images/home/modulebox2.svg'
 import modulebox3 from '@/assets/images/home/modulebox3.svg'
 import modulebox4 from '@/assets/images/home/modulebox4.svg'
+import modulebox5 from '@/assets/images/home/modulebox5.svg'
 import banner1 from '../assets/images/banner1.jpg'
 import banner2 from '../assets/images/banner2.jpg'
 import Bottom from "@/layout/components/Bottom/index.vue"
