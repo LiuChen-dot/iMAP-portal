@@ -30,7 +30,8 @@
                 </el-autocomplete>
               </div>
               <!-- 以下是需要控制显示/隐藏的尾实体和关键字输入框 -->
-              <div class="w-100p dis-flex align-c" v-if="queryType !== '1'">
+              <!-- <div class="w-100p dis-flex align-c" v-if="queryType !== '1'"> -->
+              <div class="w-100p dis-flex align-c">
                 <span class="fts-12">{{ i18n=='zh'?'尾实体':'To' }}：</span>
                 <el-select v-model="toType"  class="fl-1">
                   <el-option :label="item.name" :value="item.id" v-for="item in toTypeList" :key="item.id"></el-option>

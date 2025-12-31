@@ -20,6 +20,11 @@ import { nextTick, onMounted, ref } from "vue";
 import router from '@/router'
 import { useRoute, useRouter } from 'vue-router'
 import { getDataTypeData } from '@/api/data.js'
+import { ElMessage } from 'element-plus'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+
 const route = useRoute();
 
 const searchValue = ref(route.query.value ? route.query.value : (sessionStorage.getItem('SearchValue') ? sessionStorage.getItem('SearchValue') : ''));
@@ -30,6 +35,17 @@ const selectOptions = ref(["Escherichia coli", "alt", "napC", "L-aspartate oxida
 
 const routers = useRouter()
 const SearchButton = () => {
+  // 关键词为空时，阻止跳转
+  if (!searchValue.value || searchValue.value.trim() === ''){
+    ElMessage({
+        message: t("message.pleaseEnterKeyword"),
+        // message: '请输入关键词',
+        type: 'warning',
+        duration: 2000,
+        offset: 80
+    })
+    return
+  }
   routers.push({ path: '/Search', query: { value: searchValue.value } })
 }
 const godetail = (item) => {

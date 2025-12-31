@@ -57,7 +57,7 @@ export default {
     message: {
         searchtitle: 'Intelligent Microbial Application Platform (IMicAP)',
         rmss: 'HotSearch',
-        jz: '  ',
+        jz: '',
         yj: 'Vision & Mission',
         lxwm: 'Contact us',
         gsmc: 'Shanghai Lishan Bio-Pharmaceutical Co., Ltd.',
@@ -68,7 +68,8 @@ export default {
         value2: 'Continuous Innovation in Biopharmaceutical R&D',
         copyright: 'Copyright©2025 Shanghai Lishan Biopharmaceutical Co., Ltd.',
         icpfull: 'Shanghai ICP 2023015269-2',
-        psbfull: 'Shanghai Public Network Anbei 31011502019930'
+        psbfull: 'Shanghai Public Network Anbei 31011502019930',
+        pleaseEnterKeyword: 'Please enter a keyword',
     },
     sixteensHome: {
         ztjs: 'Description：',

@@ -23,7 +23,7 @@
         <li>{{ $t("message.gsmc") }}</li>
         <li style="cursor: pointer;" @click="gotogw">{{ $t("message.gw") }}</li>
         <li>{{ $t("message.lxdh") }}</li>
-        <li>{{ $t("message.email") }}</li>
+        <li style="cursor: pointer;" @click="goToOutLook">{{ $t("message.email") }}</li>
       </ul>
     </div>
     <div class="filing-bar">
@@ -53,6 +53,9 @@ const gotogw = ()=>{
   window.open('https://www.lishan.ltd/')
 }
 
+const goToOutLook = ()=>{
+    window.open('https://www.microsoft.com/zh-cn/microsoft-365/outlook/log-in/')
+}
 
 const showPsb = false
 const links = {
