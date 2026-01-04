@@ -220,6 +220,21 @@ const getproteinDataFun = () => {
     })
   } else {
     getBasicInformationData(sessionStorage.getItem('basic_information_id')).then(res => {
+
+      // ======== 🔥 Disease 按 confidence_score 排序（新增代码开始） ========
+      res.data.forEach(block => {
+        block.childList?.forEach(child => {
+          child.tableList?.forEach(table => {
+            if (Array.isArray(table.data)) {
+              table.data.sort(
+                (a, b) =>
+                  Number(b.confidence_score) - Number(a.confidence_score)
+              )
+            }
+          })
+        })
+      })
+
       datafz(res.data)
       filterdata(res.data, 0)
       res.data.forEach((item, index) => {

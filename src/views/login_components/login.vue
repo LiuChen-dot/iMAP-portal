@@ -69,14 +69,16 @@
                         <div><span @click="openNprivacyRead" >《{{i18n=='zh'?'用户协议及隐私政策':'User agreement and privacy policy'}}》</span></div>
                     </div> -->
                 </div>
-                <el-button @click="props.changeActive(3)" style="border: none;">{{i18n=='zh'?'忘记密码':'Forget password'}}</el-button>
+                <el-button @click="forGetPassword" style="border: none;">{{i18n=='zh'?'忘记密码':'Forget password'}}</el-button>
             </div>
         </div>
         <div class="loginbut">
             <el-button @click="login" type="info" 
                 :style="`background-color: ${butcolor};padding:20px 120px;border-radius:50px`">{{i18n=='zh'?'立即登录':'Login now'}}</el-button>
         </div>
+        <!-- >
         <div class="phonelogin"><span @click="changeLogin" >{{ active ? (i18n=='zh'?'账号密码登录':'Account password login') : (i18n=='zh'?'手机号验证码登录':'Phone number verification login') }}</span></div>
+        < -->
         <el-dialog v-model="nprivacydialog" width="50%" :show-close="false" :close-on-click-modal="false">
             <div style="text-align: center;font-size: 18px;">{{i18n=='zh'?'阅读用户协议及隐私政策':'Read user agreement and privacy policy'}}</div>
             <div style="max-height: 500px;overflow: auto;" v-html="nprivacydialogtext"></div>
@@ -109,7 +111,7 @@ const props = defineProps(['changeActive'])
 const checkPhone = (rule, value, callback) => {
   const phoneReg = /^\d{11}$/;
   if (!value) {
-    return callback(new Error(i18n.value=='zh'?"手机号不能为空":"Phone number cannot be empty"));
+    return callback(new Error(i18n.value=='zh'?"账号不能为空":"Account cannot be empty"));
   }
   setTimeout(() => {
     if (!Number.isInteger(+value)) {
@@ -118,7 +120,7 @@ const checkPhone = (rule, value, callback) => {
       if (phoneReg.test(value)) {
         callback();
       } else {
-        callback(new Error(i18n.value=='zh'?"手机号格式不正确":"Incorrect phone number format"));
+        callback(new Error(i18n.value=='zh'?"账号格式不正确":"Incorrect account format"));
       }
     }
   }, 100);
@@ -210,6 +212,8 @@ watch(() => loginForm.username, (item) => {
 })
 
 
+
+
 const loginCodeFormref = ref()
 const loginCodeForm = reactive({
     username: "",
@@ -283,6 +287,9 @@ const closenprivacydialog = () => {
     loginprivacyCheckbox.value = true
 }
 
+const forGetPassword = () => {
+    ElMessage.warning(i18n.value=='zh'?'请联系lishan@lishan.ltd':'Please connect lishan@lishan.ltd')
+}
 
 //发送验证码时间限制
 const codeSwitch = ref(true)
