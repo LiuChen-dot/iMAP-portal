@@ -70,7 +70,7 @@ export default {
         value2: '持续为生物医药研发创新',
         copyright: '版权所有©2025 上海力山生物医药有限公司',
         icpfull: '沪ICP备2023015269号-2',
-        psbfull: '沪公网安备31011502019930号',
+        psbfull: '沪公网安备31011502404909号',
         pleaseEnterKeyword: '请输入关键词',
     },
     sixteensHome: {

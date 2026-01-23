@@ -91,7 +91,7 @@ const detailBtn = () => {
     window.open('/gene', '_blank')
   } else if (showitem.value.type == 'RNA') {
     sessionStorage.setItem('rna_id', showitem.value.id)
-    sessionStorage.setItem('zwType', showitem.value.type)
+    sessionStorage.setItem('zwType', showitem.value.type.toLowerCase())
     window.open('/rna', '_blank')
   } else if (showitem.value.type == 'basic_information') {
     sessionStorage.setItem('basic_information_id', showitem.value.id)

@@ -75,7 +75,6 @@
 import { nextTick, onMounted, ref } from 'vue';
 import { searchByPage, getsearchAggregation, platformAggregation } from '@/api/data.js'
 import { getGraph, findGraph, getSummary,searchGraph } from '@/api/KnowledgeGraph.js'
-import childpage from './childpage.vue'
 import neo4j from './neo4j.vue'
 import { ElMessage } from 'element-plus';
 import Bottom from "@/layout/components/Bottom/index.vue"
@@ -188,57 +187,123 @@ const SearchFun=()=>{
 
 const queryTypeChange=()=>{
   if(queryType.value=='1'){
-    fromTypeList.value=[{id:'1',name:'Gene'},{id:'2',name:'Protein'},{id:'3',name:'Microbe'},{id:'4',name:'RNA'},{id:'5',name:'Disease'},{id:'6',name:'Small molecule'},{id:'7',name:'GO term'}]
+    fromTypeList.value=[
+        {id:'1',name:'Gene'},
+        {id:'2',name:'Protein'},
+        {id:'3',name:'Microbe'},
+        {id:'4',name:'RNA'},
+        {id:'5',name:'Disease'},
+        {id:'6',name:'Small molecule'},
+        {id:'7',name:'GO term'}
+    ]
     var ind1=fromTypeList.value.findIndex(item => item.id == fromType.value)
     if(ind1==-1){
       fromType.value=fromTypeList.value[0].id
     }
     if(fromType.value=='1'){
-      toTypeList.value=[{id:'0',name:'All'},{id:'2',name:'Protein'},{id:'3',name:'Microbe'},{id:'4',name:'RNA'}]
+      toTypeList.value=[
+          {id:'0',name:'All'},
+          {id:'2',name:'Protein'},
+          {id:'3',name:'Microbe'},
+          {id:'4',name:'RNA'}
+      ]
     }
     if(fromType.value=='2'){
-      toTypeList.value=[{id:'0',name:'All'},{id:'1',name:'Gene'},{id:'3',name:'Microbe'},{id:'7',name:'GO term'}]
+      toTypeList.value=[
+        {id:'0',name:'All'},
+        {id:'1',name:'Gene'},
+        {id:'3',name:'Microbe'},
+        {id:'7',name:'GO term'}
+      ]
     }
     if(fromType.value=='3'){
-      toTypeList.value=[{id:'0',name:'All'},{id:'1',name:'Gene'},{id:'4',name:'RNA'},{id:'5',name:'Disease'},{id:'6',name:'Small molecule'}]
+      toTypeList.value=[
+        {id:'0',name:'All'},
+        {id:'1',name:'Gene'},
+        {id:'4',name:'RNA'},
+        {id:'5',name:'Disease'},
+        {id:'6',name:'Small molecule'}
+      ]
     }
     if(fromType.value=='4'){
-      toTypeList.value=[{id:'0',name:'All'},{id:'1',name:'Gene'},{id:'3',name:'Microbe'}]
+      toTypeList.value=[
+        {id:'0',name:'All'},
+        {id:'1',name:'Gene'},
+        {id:'3',name:'Microbe'}
+      ]
     }
     if(fromType.value=='5'||fromType.value=='6'){
-      toTypeList.value=[{id:'0',name:'All'},{id:'3',name:'Microbe'}]
+      toTypeList.value=[
+        {id:'0',name:'All'},
+        {id:'3',name:'Microbe'}
+      ]
     }
     if(fromType.value=='7'){
-      toTypeList.value=[{id:'2',name:'Protein'}]
+      toTypeList.value=[
+        {id:'2',name:'Protein'}
+      ]
     }
   }
   if(queryType.value=='2'){
-    fromTypeList.value=[{id:'1',name:'Gene'},{id:'2',name:'Protein'},{id:'3',name:'Microbe'},{id:'4',name:'RNA'},{id:'7',name:'GO term'}]
+    fromTypeList.value=[
+        {id:'1',name:'Gene'},
+        {id:'2',name:'Protein'},
+        {id:'3',name:'Microbe'},
+        {id:'4',name:'RNA'},
+        {id:'7',name:'GO term'}
+    ]
     var ind1=fromTypeList.value.findIndex(item => item.id == fromType.value)
     if(ind1==-1){
       fromType.value=fromTypeList.value[0].id
     }
     if(fromType.value=='1'||fromType.value=='2'||fromType.value=='4'){
-      toTypeList.value=[{id:'5',name:'Disease'},{id:'6',name:'Small molecule'}]
+      toTypeList.value=[
+        {id:'5',name:'Disease'},
+        {id:'6',name:'Small molecule'}
+      ]
     }
     if(fromType.value=='3'){
-      toTypeList.value=[{id:'0',name:'All'},{id:'1',name:'Gene'},{id:'2',name:'Protein'},{id:'4',name:'RNA'},{id:'5',name:'Disease'},{id:'6',name:'Small molecule'},{id:'7',name:'GO term'}]
+      toTypeList.value=[
+        {id:'0',name:'All'},
+        {id:'1',name:'Gene'},
+        {id:'2',name:'Protein'},
+        {id:'4',name:'RNA'},
+        {id:'5',name:'Disease'},
+        {id:'6',name:'Small molecule'},
+        {id:'7',name:'GO term'}
+      ]
     }
     if(fromType.value=='7'){
-      toTypeList.value=[{id:'3',name:'Microbe'}]
+      toTypeList.value=[
+        {id:'3',name:'Microbe'}
+      ]
     }
   }
   if(queryType.value=='3'){
-    fromTypeList.value=[{id:'1',name:'Gene'},{id:'2',name:'Protein'},{id:'3',name:'Microbe'},{id:'4',name:'RNA'}]
+    fromTypeList.value=[
+        {id:'1',name:'Gene'},
+        {id:'2',name:'Protein'},
+        {id:'3',name:'Microbe'},
+        {id:'4',name:'RNA'}
+    ]
     var ind1=fromTypeList.value.findIndex(item => item.id == fromType.value)
     if(ind1==-1){
       fromType.value=fromTypeList.value[0].id
     }
     if(fromType.value=='1'||fromType.value=='2'||fromType.value=='4'){
-      toTypeList.value=[{id:'5',name:'Disease'},{id:'6',name:'Small molecule'}]
+      toTypeList.value=[
+        {id:'5',name:'Disease'},
+        {id:'6',name:'Small molecule'}
+      ]
     }
     if(fromType.value=='3'){
-      toTypeList.value=[{id:'0',name:'All'},{id:'1',name:'Gene'},{id:'2',name:'Protein'},{id:'4',name:'RNA'},{id:'5',name:'Disease'},{id:'6',name:'Small molecule'}]
+      toTypeList.value=[
+        {id:'1',name:'Gene'},
+        {id:'2',name:'Protein'},
+        {id:'4',name:'RNA'},
+        {id:'5',name:'Disease'},
+        {id:'6',name:'Small molecule'}
+      ]
     }
   }
   var ind1=toTypeList.value.findIndex(item => item.id == toType.value)

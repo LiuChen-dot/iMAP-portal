@@ -157,7 +157,6 @@
 
 <script setup>
 import Search from './Search/search.vue'
-import childpage from '@/views/KnowledgeGraph/childpage.vue'
 import { ref } from "vue";
 import { formatDate } from '@/utils/index'
 import { getsearchAggregation, platformAggregation } from '@/api/data.js'

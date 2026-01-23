@@ -221,7 +221,7 @@ const getproteinDataFun = () => {
   } else {
     getBasicInformationData(sessionStorage.getItem('basic_information_id')).then(res => {
 
-      // ======== 🔥 Disease 按 confidence_score 排序（新增代码开始） ========
+      // ======== 🔥 Disease/Small Molecule 按 confidence_score 排序 ========
       res.data.forEach(block => {
         block.childList?.forEach(child => {
           child.tableList?.forEach(table => {

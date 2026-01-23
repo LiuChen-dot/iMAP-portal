@@ -34,13 +34,7 @@
         <img src="../../../assets/logo/ICP-Filing.png" alt="ICP备案图标" />
         {{ $t('message.icpfull') }}
       </a>
-      <a
-        v-if="showPsb"
-        class="filing-link"
-        :href="links.psb"
-        target="_blank"
-        rel="noopener"
-      >
+      <a class="filing-link" :href="links.psb" target="_blank" rel="noopener" >
         <img src="../../../assets/logo/PSB-Filing.png" alt="公网安备图标" />
         {{ $t('message.psbfull') }}
       </a>
@@ -61,7 +55,7 @@ const showPsb = false
 const links = {
   copyright: 'https://www.lishan.ltd/',
   icp: 'https://beian.miit.gov.cn/',
-  psb: 'https://www.beian.gov.cn/portal/registerSystemInfo?recordcode=31011502019930'
+  psb: 'https://www.beian.gov.cn/portal/registerSystemInfo?recordcode=31011502404909'
 }
 </script>
 

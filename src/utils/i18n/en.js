@@ -68,7 +68,7 @@ export default {
         value2: 'Continuous Innovation in Biopharmaceutical R&D',
         copyright: 'Copyright©2025 Shanghai Lishan Biopharmaceutical Co., Ltd.',
         icpfull: 'Shanghai ICP 2023015269-2',
-        psbfull: 'Shanghai Public Network Anbei 31011502019930',
+        psbfull: 'Shanghai Public Network Anbei 31011502404909',
         pleaseEnterKeyword: 'Please enter a keyword',
     },
     sixteensHome: {
