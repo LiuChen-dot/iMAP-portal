@@ -33,7 +33,7 @@
               <!-- <div class="w-100p dis-flex align-c" v-if="queryType !== '1'"> -->
               <div class="w-100p dis-flex align-c">
                 <span class="fts-12">{{ i18n=='zh'?'尾实体':'To' }}：</span>
-                <el-select v-model="toType"  class="fl-1">
+                <el-select v-model="toType"  class="fl-1" @change="onToTypeChange">
                   <el-option :label="item.name" :value="item.id" v-for="item in toTypeList" :key="item.id"></el-option>
                 </el-select>
               </div>
@@ -185,7 +185,18 @@ const SearchFun=()=>{
   })
 }
 
+// 切换尾实体类型时清空尾实体的关键字和 ID，避免残留导致查不到或查错
+const onToTypeChange = () => {
+  SearchValue1.value = ''
+  toKey.value = ''
+}
+
 const queryTypeChange=()=>{
+  // 切换查询类型或头实体类型时，清空头尾关键字和 ID，避免上一组选择残留导致查不到数据
+  SearchValue.value = ''
+  fromKey.value = ''
+  SearchValue1.value = ''
+  toKey.value = ''
   if(queryType.value=='1'){
     fromTypeList.value=[
         {id:'1',name:'Gene'},
