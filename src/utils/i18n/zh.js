@@ -6,7 +6,12 @@ export default {
         fou:'否',
         scwj:'上传文件',
         yypz:'开始运行',
-        nodata:'暂无数据'
+        nodata:'「暂无数据」'
+    },
+    KnowledgeGraph: {
+        welcomeTitle: '欢迎使用知识图谱平台！',
+        hintLeft: '← 「左侧面板开启检索」',
+        hintRight: '→ 「点击此处查看示例图谱」',
     },
     Sidebar: {
         KnowledgeQuery: '知识查询',
@@ -28,7 +33,7 @@ export default {
         cz: '操作',
         down: '下载',
         zw: '暂无我的文件',
-        add: '加入测下报告',
+        add: '加入测序报告',
     },
     personal:{
         personalCenter: '个人中心',

@@ -6,7 +6,7 @@
           :class="activeName == item.dictValue ? 'active' : ''">
           {{ i18n == 'zh' ? item.dictLabel : item.remark }}
         </div>
-        <div @click="exportReport()">{{ i18n == 'zh' ? '导出测下报告' : 'Export Test Report' }}</div>
+        <div @click="exportReport()">{{ i18n == 'zh' ? '导出测序报告' : 'Export Test Report' }}</div>
       </div>
       <div class="content">
         <div class="list" v-if="contentList.length">
@@ -20,35 +20,62 @@
             </div>
           </div>
         </div>
-        <div class="text" v-else>
-          <div class="text-w-700">{{ $t('sixteensHome.ztjs') }}</div>
-          <div class="pad-t-10 pad-l-20 fts-17">{{ $t('sixteensHome.ztjstext') }}</div>
-          <div class="pad-t-10 pad-l-20 fts-17">{{ $t('sixteensHome.ztjstext2') }}</div>
-          <div class="pad-t-10 text-w-700">{{ $t('sixteensHome.cpjs') }}</div>
-          <div class="pad-t-10 pad-l-20 fts-17">{{ $t('sixteensHome.cpjstext') }}</div>
-          <div class="pad-t-10 pad-l-20 fts-17 text-w-700">{{ $t('sixteensHome.yzsjjfa') }}</div>
-          <div class="pad-t-10 pad-l-30 fts-15">{{ $t('sixteensHome.yzsjjfatext') }}</div>
-          <div class="pad-t-10 pad-l-20 fts-17 text-w-700">{{ $t('sixteensHome.sxdz') }}</div>
-          <div class="pad-t-10 pad-l-30 fts-15">{{ $t('sixteensHome.sxdztext') }}</div>
-          <div class="pad-t-10 pad-l-20 fts-17 text-w-700">{{ $t('sixteensHome.zlxl') }}</div>
-          <div class="pad-t-10 pad-l-30 fts-15">{{ $t('sixteensHome.zlxltext') }}</div>
-          <div class="pad-t-10 pad-l-20 fts-17 text-w-700">{{ $t('sixteensHome.ztcj') }}</div>
-          <div class="pad-t-10 pad-l-30 fts-15">{{ $t('sixteensHome.ztcjtext') }}</div>
-          <div class="pad-t-10 pad-l-30 fts-15">{{ $t('sixteensHome.ztcjtext2') }}</div>
-          <div class="pad-t-10 text-w-700">{{ $t('sixteensHome.cpys') }}</div>
-          <div class="pad-t-10 pad-l-20 fts-17">{{ $t('sixteensHome.cpystext') }}</div>
-          <ul class="pad-t-10 pad-l-20 fts-17">
-            <li>{{ $t('sixteensHome.cpystext1') }}</li>
-            <li>{{ $t('sixteensHome.cpystext2') }}</li>
-            <li>{{ $t('sixteensHome.cpystext3') }}</li>
-            <li>{{ $t('sixteensHome.cpystext4') }}</li>
-            <li>{{ $t('sixteensHome.cpystext5') }}</li>
-            <li>{{ $t('sixteensHome.cpystext6') }}</li>
-          </ul>
-          <div class="pad-t-10 text-w-700">{{ $t('sixteensHome.fxlc') }}</div>
-          <div class="pad-t-10 pad-l-20 fts-17">
-            <img src="../../assets/images/16s/fxlczh.png" alt="" class="w-100p" v-if="i18n=='zh'">
-            <img src="../../assets/images/16s/fxlcen.png" alt="" class="w-100p" v-else>
+        <div class="overview" v-else>
+          <div class="overview-inner">
+            <!-- 整体介绍 -->
+            <section class="overview-section">
+              <h2 class="overview-title">{{ $t('sixteensHome.ztjs') }}</h2>
+              <p class="overview-desc">{{ $t('sixteensHome.ztjstext') }}</p>
+              <p class="overview-desc">{{ $t('sixteensHome.ztjstext2') }}</p>
+            </section>
+            <!-- 产品介绍 -->
+            <section class="overview-section">
+              <h2 class="overview-title">{{ $t('sixteensHome.cpjs') }}</h2>
+              <p class="overview-desc">{{ $t('sixteensHome.cpjstext') }}</p>
+            </section>
+            <!-- 一站式解决方案 -->
+            <section class="overview-section">
+              <h2 class="overview-title">{{ $t('sixteensHome.yzsjjfa') }}</h2>
+              <p class="overview-desc">{{ $t('sixteensHome.yzsjjfatext') }}</p>
+            </section>
+            <!-- 两列小标题区块 -->
+            <div class="overview-grid">
+              <section class="overview-section overview-card">
+                <h3 class="overview-subtitle">{{ $t('sixteensHome.sxdz') }}</h3>
+                <p class="overview-desc">{{ $t('sixteensHome.sxdztext') }}</p>
+              </section>
+              <section class="overview-section overview-card">
+                <h3 class="overview-subtitle">{{ $t('sixteensHome.zlxl') }}</h3>
+                <p class="overview-desc">{{ $t('sixteensHome.zlxltext') }}</p>
+              </section>
+            </div>
+            <!-- 作图插件 -->
+            <section class="overview-section">
+              <h2 class="overview-title">{{ $t('sixteensHome.ztcj') }}</h2>
+              <p class="overview-desc">{{ $t('sixteensHome.ztcjtext') }}</p>
+              <p class="overview-desc">{{ $t('sixteensHome.ztcjtext2') }}</p>
+            </section>
+            <!-- 产品优势 -->
+            <section class="overview-section overview-advantage">
+              <h2 class="overview-title">{{ $t('sixteensHome.cpys') }}</h2>
+              <p class="overview-desc overview-intro">{{ $t('sixteensHome.cpystext') }}</p>
+              <ul class="overview-list">
+                <li>{{ $t('sixteensHome.cpystext1') }}</li>
+                <li>{{ $t('sixteensHome.cpystext2') }}</li>
+                <li>{{ $t('sixteensHome.cpystext3') }}</li>
+                <li>{{ $t('sixteensHome.cpystext4') }}</li>
+                <li>{{ $t('sixteensHome.cpystext5') }}</li>
+                <li>{{ $t('sixteensHome.cpystext6') }}</li>
+              </ul>
+            </section>
+            <!-- 分析流程 -->
+            <section class="overview-section overview-flow">
+              <h2 class="overview-title">{{ $t('sixteensHome.fxlc') }}</h2>
+              <div class="overview-image-wrap">
+                <img src="../../assets/images/16s/fxlczh.png" alt="" v-if="i18n=='zh'">
+                <img src="../../assets/images/16s/fxlcen.png" alt="" v-else>
+              </div>
+            </section>
           </div>
         </div>
       </div>
@@ -176,7 +203,7 @@ const exportReport = async () => {
             return;
         }
         // 获取文件名（从响应头中获取，如果没有则使用默认值）
-        const fileName = '测下报告.pdf';
+        const fileName = '测序报告.pdf';
         // 创建下载链接
         const downloadUrl = URL.createObjectURL(blob);
         const a = document.createElement("a");
@@ -224,6 +251,8 @@ li{
 }
 
 .box {
+  box-sizing: border-box;
+  width: 100%;
   padding: 20px 32px;
   background-color: #F7F7F7;
   display: flex;
@@ -231,6 +260,7 @@ li{
   min-height: 100%;
 
   .navigatebox {
+    flex-shrink: 0;
     text-align: center;
     font-size: 14px;
 
@@ -251,7 +281,8 @@ li{
   }
 
   .content {
-    flex: 5;
+    flex: 1;
+    min-width: 0;
     background-color: white;
     min-height: 100%;
     .list {
@@ -304,8 +335,125 @@ li{
       }
     }
 
-    .text {
+    .overview {
+      padding: 28px 32px 40px;
+      overflow: hidden;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .overview-inner {
+      width: 100%;
+      max-width: min(1200px, 100%);
+      margin: 0 auto;
+    }
+
+    .overview-section {
+      margin-bottom: 32px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    .overview-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin: 0 0 14px 0;
+      padding-left: 10px;
+      border-left: 4px solid var(--el-theme-color);
+      line-height: 1.4;
+    }
+
+    .overview-subtitle {
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+      margin: 0 0 10px 0;
+      line-height: 1.4;
+    }
+
+    .overview-desc {
+      font-size: 15px;
+      color: #555;
+      line-height: 1.75;
+      margin: 0 0 12px 0;
+      text-align: justify;
+
+      &:last-of-type {
+        margin-bottom: 0;
+      }
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .overview-card {
+      background: #f8f9fa;
+      border-radius: 8px;
       padding: 20px;
+      margin-bottom: 0;
+    }
+
+    .overview-advantage .overview-intro {
+      margin-bottom: 16px;
+    }
+
+    .overview-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        position: relative;
+        font-size: 15px;
+        color: #555;
+        line-height: 1.75;
+        padding-left: 20px;
+        margin-bottom: 10px;
+
+        &::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 10px;
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: var(--el-theme-color);
+        }
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    .overview-flow .overview-title {
+      margin-bottom: 16px;
+    }
+
+    .overview-image-wrap {
+      border-radius: 8px;
+      overflow: hidden;
+      background: #f8f9fa;
+
+      img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .overview-grid {
+        grid-template-columns: 1fr;
+      }
     }
   }
 

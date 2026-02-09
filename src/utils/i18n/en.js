@@ -5,7 +5,12 @@ export default {
         fou:'No',
         scwj:'upload file',
         yypz:'Start Run',
-        nodata:'No Data'
+        nodata:'「No Data」'
+    },
+    KnowledgeGraph: {
+        welcomeTitle: 'Welcome to the Knowledge Graph Platform!',
+        hintLeft: '← 「Start your Search with left panel」',
+        hintRight: '→ 「Click here to display the example graph」',
     },
     Sidebar: {
         KnowledgeQuery: 'Knowledge Query',

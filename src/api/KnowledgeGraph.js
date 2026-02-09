@@ -8,10 +8,11 @@ export function getGraph(params) {
     })
 }
 
-// 查询字典数据列表
+// 查询字典数据列表（name 需编码以支持括号等特殊字符）
 export function findGraph(params) {
+    const name = params.name != null ? encodeURIComponent(params.name) : ''
     return request({
-        url: `graph/findGraph?name=${params.name}&type=${params.type}`,
+        url: `graph/findGraph?name=${name}&type=${params.type}`,
         method: 'get',
     })
 }

@@ -15,7 +15,13 @@
           </template>
         </el-empty>
       </div>
-      <div v-show="!isshow && !loading">
+      <!-- 引导态：首屏未查询时展示（中英双语） -->
+      <div v-show="!isshow && !loading && !hasSearched" class="kg-welcome">
+        <h1 class="kg-welcome__title">{{ $t('KnowledgeGraph.welcomeTitle') }}</h1>
+        <p class="kg-welcome__hint">{{ $t('KnowledgeGraph.hintLeft') }}</p>
+        <p class="kg-welcome__hint kg-welcome__hint--clickable" @click="onExampleGraphClick">{{ $t('KnowledgeGraph.hintRight') }}</p>
+      </div>
+      <div v-show="!isshow && !loading && hasSearched">
         <el-empty :description="$t(`common.nodata`)" />
       </div>
     </div>
@@ -45,7 +51,16 @@ import { useLanguageStore } from '@/store/modules/language';
 
 const languageStore = useLanguageStore()
 const i18n = computed(() => languageStore.i18n)
-const props = defineProps(['GraphList', 'loading'])
+const emit = defineEmits(['example-graph-click'])
+const props = defineProps({
+  GraphList: { type: Object, default: () => ({ nodes: [], edges: [] }) },
+  loading: { type: Boolean, default: false },
+  hasSearched: { type: Boolean, default: false }
+})
+
+const onExampleGraphClick = () => {
+  emit('example-graph-click')
+}
 const isshow = ref(false)
 const isShowNodeMenuPanel = ref(false);
 const nodeMenuPanelPosition = ref({ x: 0, y: 0 });
@@ -134,31 +149,35 @@ const showDialog = (event, nodeitem = {}) => {
 }
 
 watch(() => props.GraphList, (item) => {
+  if (!item || !item.nodes || !item.edges) {
+    isshow.value = false
+    return
+  }
   isShowNodeMenuPanel.value = false
   neo4jData.results[0].data[0].graph.nodes = []
   neo4jData.results[0].data[0].graph.relationships = []
-  item.nodes.forEach(item => {
+  item.nodes.forEach(nodeItem => {
     neo4jData.results[0].data[0].graph.nodes.push(
       {
-        id: item.id,
-        labels: [item.properties.name],
-        color: item.properties.color,
+        id: nodeItem.id,
+        labels: [nodeItem.properties.name],
+        color: nodeItem.properties.color,
         properties: {
-          type: item.properties.type,
-          nodeId: item.properties.nodeId,
+          type: nodeItem.properties.type,
+          nodeId: nodeItem.properties.nodeId,
         },
       },
     )
   })
-  item.edges.forEach(item => {
+  item.edges.forEach(edgeItem => {
     neo4jData.results[0].data[0].graph.relationships.push(
       {
-        id: item.type,
-        type: item.type,
-        startNode: item.source,
-        endNode: item.target,
+        id: edgeItem.type,
+        type: edgeItem.type,
+        startNode: edgeItem.source,
+        endNode: edgeItem.target,
         properties: {
-          from: item.type,
+          from: edgeItem.type,
         },
       },
     )
@@ -230,5 +249,47 @@ onMounted(() => {
   to {
     transform: rotate(360deg);
   }
+}
+
+/* 引导态：首屏欢迎与操作提示 */
+.kg-welcome {
+  width: 100%;
+  height: 100%;
+  background-color: #F5F5F5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.kg-welcome__title {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 0 0 28px;
+  padding: 0;
+  background: linear-gradient(90deg, #4a7c59, #6b8f71, #8a9b7a, #9a8b6a, #b07a5a, #c97b5a);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.kg-welcome__hint {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 17px;
+  color: #999999;
+  margin: 8px 0;
+  line-height: 1.5;
+}
+
+.kg-welcome__hint--clickable {
+  cursor: pointer;
+}
+.kg-welcome__hint--clickable:hover {
+  color: #666;
 }
 </style>

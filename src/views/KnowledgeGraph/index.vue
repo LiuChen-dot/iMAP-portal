@@ -63,7 +63,7 @@
           </div>
         </div>
         <div class="list_rig">
-          <neo4j ref="neo4jref" :GraphList="GraphList" :loading="loading"></neo4j>
+          <neo4j ref="neo4jref" :GraphList="GraphList" :loading="loading" :hasSearched="hasSearched" @example-graph-click="loadExampleGraph"></neo4j>
         </div>
       </div>
     </div>
@@ -129,6 +129,7 @@ const colorList = ref([
 ])
 
 const GraphList = ref([])
+const hasSearched = ref(false)
 const SearchGraph = () => {
   getGraph({ id: querySearchId.value, type: SelectValue.value }).then(res => {
     res.data.edges ? '' : res.data.edges = []
@@ -169,6 +170,7 @@ const typeClick = (val, ind) => {
 }
 
 const SearchFun=()=>{
+  hasSearched.value = true
   loading.value = true
   searchGraph({
     queryType:queryType.value,
@@ -189,6 +191,35 @@ const SearchFun=()=>{
 const onToTypeChange = () => {
   SearchValue1.value = ''
   toKey.value = ''
+}
+
+// 示例图谱：点击引导态「点击此处查看示例图谱」时，自动填充左侧面板并查询
+// 展示用全称；ES search_content.ngram 用全称查不到时改用 symbol 段（如 oprI）才能命中
+const EXAMPLE_DISPLAY = 'oprI(Pseudomonas fluorescens)'
+const EXAMPLE_QUERY = 'oprI'
+const loadExampleGraph = () => {
+  queryType.value = '1'
+  fromType.value = '1'
+  toType.value = '0'
+  limit.value = 10
+  queryTypeChange()
+  SearchValue.value = EXAMPLE_DISPLAY
+  findGraph({ name: EXAMPLE_QUERY, type: '1' }).then(res => {
+    const list = res && res.data ? res.data : []
+    if (list.length > 0) {
+      const clean = (s) => (s || '').replace(/<[^>]*>/g, '').trim()
+      const exact = list.find((item) => clean(item.search_content || item.searchContent) === EXAMPLE_DISPLAY)
+      const chosen = exact || list[0]
+      fromKey.value = chosen.id || ''
+      SearchValue.value = clean(chosen.search_content || chosen.searchContent) || EXAMPLE_DISPLAY
+    } else {
+      ElMessage.warning(i18n.value === 'zh' ? '未找到示例实体，请检查数据或手动选择' : 'Example entity not found, please select manually')
+    }
+    nextTick(() => SearchFun())
+  }).catch(() => {
+    ElMessage.warning(i18n.value === 'zh' ? '获取示例实体失败，请手动选择后查询' : 'Failed to load example entity, please select and query manually')
+    nextTick(() => SearchFun())
+  })
 }
 
 const queryTypeChange=()=>{
