@@ -67,7 +67,6 @@
         </div>
       </div>
     </div>
-    <Bottom style="position: relative;"></Bottom>
   </div>
 </template>
 
@@ -77,7 +76,6 @@ import { searchByPage, getsearchAggregation, platformAggregation } from '@/api/d
 import { getGraph, findGraph, getSummary,searchGraph } from '@/api/KnowledgeGraph.js'
 import neo4j from './neo4j.vue'
 import { ElMessage } from 'element-plus';
-import Bottom from "@/layout/components/Bottom/index.vue"
 import { useLanguageStore } from '@/store/modules/language';
 
 

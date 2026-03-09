@@ -2,6 +2,8 @@
     <ul>
         <template v-for="(item, index) in items" :key="index">
             <li :class="[item.ind == 1 ? 'lis1' : '']"
+                :data-nav-key="getBlockKey(index)"
+                :data-nav-level="item.ind"
                 v-if="(((!item.last || item.fieldValue) && !item.show) || ((item.dataType == '2' ||item.dataType == '6' || item.dataType == '4'|| item.dataType == '5'|| item.dataType == '7'||item.dataType == '9'||item.dataType == '10') && !item.show))">
                 <p :class="['p_box', (item.dataType != '2'&&item.dataType != '6'&&item.dataType != '7') ? (item.last ? 'fts-12' : 'fts-' + (20 - ((item.ind - 1) * 2))) : (item.ind == 1 ? 'fts-20' : 'fts-16'),
                     (item.dataType != '2'&&item.dataType != '6'&&item.dataType != '7') ? (item.last ? 'text-w-400' : 'text-w-' + (8 - ((item.ind - 1) * 2)) + '00') : (item.ind == 1 ? 'text-w-800' : 'text-w-600'), 'pad-l-16',
@@ -15,51 +17,117 @@
                         v-html="item.fieldValue ? getLink(item) : ''"></span>
                 </p>
                 <div v-if="(item.dataType == '2' || item.dataType == '6')  && item.childList" class="pad-10" >
-                    <div v-for="(str,indz) in item.tableList.slice((item.page - 1) * item.pageSize, (item.page - 1) * item.pageSize + item.pageSize)" style="border:1px dashed #ccc;padding:10px;padding-top:0;border-radius:10px;">
-                        <div class="fts-12" style="color:var(--el-theme-color);padding:10px 0">{{str.name}}</div>
-                        <el-table border class="table"
-                            :data="str.data.slice((str.page - 1) * str.pageSize, (str.page - 1) * str.pageSize + str.pageSize)"
-                            :scrollbar-always-on='str.tableWidth > str.contentWidth ? true : false'>
-                            <el-table-column v-for="(val, ind) in item.childList" :key="ind" :prop="val.showName"
-                                :width="str.tableWidth > str.contentWidth ? (val.showNameNew.length * 7 + 24) : 'auto'">
-                                <template #header>
-                                    <div>{{ val.showNameNew }}</div>
-                                </template>
-                                <template #default="scope">
-                                    <p class="ellipsis-multiline" style="cursor: pointer">
-                                        <el-tooltip class="box-item" effect="light"
-                                            :content="scope.row[val.showName] ? scope.row[val.showName] : ''"
-                                            placement="top">
-                                            <span>{{ scope.row[val.showName] ? getTableLink(val,scope.row) : '' }}</span>
-                                        </el-tooltip>
-                                    </p>
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                        <div class="mar-t-10 dis-flex just-c-fe" v-if="str.data.length>5">
-                            <el-pagination class="pagination" size="small"  v-model:current-page="str.page"
-                                v-model:page-size="str.pageSize"
-                                :page-sizes="[5, 10, 20, 30, 50, str.data.length < 100 ? 100 : str.data.length]"
-                                layout="total, sizes, prev, pager, next, jumper" :total="str.data.length">
+                    <template v-if="item.tableList.length > 1">
+                        <!-- 多 strain：合并展示，≤N 个用按钮切换，>N 个用下拉选择；表格保留每页条数分页 -->
+                        <div class="strain-switcher mar-b-10">
+                            <template v-if="item.tableList.length <= MAX_VISIBLE_STRAINS">
+                                <el-radio-group
+                                    :model-value="getSelectedStrainIndex(getBlockKey(index))"
+                                    @update:model-value="(i) => setSelectedStrainIndex(getBlockKey(index), i)"
+                                    size="small">
+                                    <el-radio-button
+                                        v-for="(str, si) in item.tableList"
+                                        :key="si"
+                                        :label="si">
+                                        {{ str.name }}
+                                    </el-radio-button>
+                                </el-radio-group>
+                            </template>
+                            <template v-else>
+                                <span class="strain-label">{{ (i18n === 'zh' ? '选择菌株：' : 'Strain: ') }}</span>
+                                <el-select
+                                    :model-value="getSelectedStrainIndex(getBlockKey(index))"
+                                    @update:model-value="(i) => setSelectedStrainIndex(getBlockKey(index), i)"
+                                    size="small"
+                                    class="strain-select"
+                                    :placeholder="i18n === 'zh' ? '请选择菌株' : 'Select strain'">
+                                    <el-option
+                                        v-for="(str, si) in item.tableList"
+                                        :key="si"
+                                        :label="str.name"
+                                        :value="si" />
+                                </el-select>
+                            </template>
+                        </div>
+                        <div v-if="getSelectedStr(item, index)" style="border:1px dashed #ccc;padding:10px;padding-top:0;border-radius:10px;">
+                            <div class="fts-12" style="color:var(--el-theme-color);padding:10px 0">{{ getSelectedStr(item, index).name }}</div>
+                            <el-table border class="table"
+                                :data="getSelectedStr(item, index).data.slice((getSelectedStr(item, index).page - 1) * getSelectedStr(item, index).pageSize, (getSelectedStr(item, index).page - 1) * getSelectedStr(item, index).pageSize + getSelectedStr(item, index).pageSize)"
+                                :scrollbar-always-on="getSelectedStr(item, index).tableWidth > getSelectedStr(item, index).contentWidth">
+                                <el-table-column v-for="(val, ind) in item.childList" :key="ind" :prop="val.showName"
+                                    :min-width="getColumnHeaderWidth(val.showNameNew)">
+                                    <template #header>
+                                        <div :title="val.showNameNew">{{ val.showNameNew }}</div>
+                                    </template>
+                                    <template #default="scope">
+                                        <p class="ellipsis-multiline" style="cursor: pointer">
+                                            <el-tooltip class="box-item" effect="light"
+                                                :content="scope.row[val.showName] ? scope.row[val.showName] : ''"
+                                                placement="top">
+                                                <span>{{ scope.row[val.showName] ? getTableLink(val,scope.row) : '' }}</span>
+                                            </el-tooltip>
+                                        </p>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                            <!-- 当前菌株表格的每页条数分页（保留原分页功能） -->
+                            <div class="mar-t-10 dis-flex just-c-fe" v-if="getSelectedStr(item, index).data.length > 5">
+                                <el-pagination class="pagination" size="small"  v-model:current-page="getSelectedStr(item, index).page"
+                                    v-model:page-size="getSelectedStr(item, index).pageSize"
+                                    :page-sizes="[5, 10, 20, 30, 50, getSelectedStr(item, index).data.length < 100 ? 100 : getSelectedStr(item, index).data.length]"
+                                    layout="total, sizes, prev, pager, next, jumper" :total="getSelectedStr(item, index).data.length">
+                                </el-pagination>
+                            </div>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <!-- 单 strain 或原分页展示 -->
+                        <div v-for="(str,indz) in item.tableList.slice((item.page - 1) * item.pageSize, (item.page - 1) * item.pageSize + item.pageSize)" style="border:1px dashed #ccc;padding:10px;padding-top:0;border-radius:10px;">
+                            <div class="fts-12" style="color:var(--el-theme-color);padding:10px 0">{{str.name}}</div>
+                            <el-table border class="table"
+                                :data="str.data.slice((str.page - 1) * str.pageSize, (str.page - 1) * str.pageSize + str.pageSize)"
+                                :scrollbar-always-on='str.tableWidth > str.contentWidth ? true : false'>
+                                <el-table-column v-for="(val, ind) in item.childList" :key="ind" :prop="val.showName"
+                                    :min-width="getColumnHeaderWidth(val.showNameNew)">
+                                    <template #header>
+                                        <div :title="val.showNameNew">{{ val.showNameNew }}</div>
+                                    </template>
+                                    <template #default="scope">
+                                        <p class="ellipsis-multiline" style="cursor: pointer">
+                                            <el-tooltip class="box-item" effect="light"
+                                                :content="scope.row[val.showName] ? scope.row[val.showName] : ''"
+                                                placement="top">
+                                                <span>{{ scope.row[val.showName] ? getTableLink(val,scope.row) : '' }}</span>
+                                            </el-tooltip>
+                                        </p>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                            <div class="mar-t-10 dis-flex just-c-fe" v-if="str.data.length>5">
+                                <el-pagination class="pagination" size="small"  v-model:current-page="str.page"
+                                    v-model:page-size="str.pageSize"
+                                    :page-sizes="[5, 10, 20, 30, 50, str.data.length < 100 ? 100 : str.data.length]"
+                                    layout="total, sizes, prev, pager, next, jumper" :total="str.data.length">
+                                </el-pagination>
+                            </div>
+                        </div>
+                        <div class="mar-t-10 dis-flex just-c-c" v-if="item.tableList.length>3">
+                            <el-pagination class="pagination" size="small"  v-model:current-page="item.page"
+                                v-model:page-size="item.pageSize"
+                                :page-sizes="[5, 10, 20, 30, 50, item.tableList.length < 100 ? 100 : item.tableList.length]"
+                                layout="total, sizes, prev, pager, next, jumper" :total="item.tableList.length">
                             </el-pagination>
                         </div>
-                    </div>
-                    <div class="mar-t-10 dis-flex just-c-c" v-if="item.tableList.length>3">
-                        <el-pagination class="pagination" size="small"  v-model:current-page="item.page"
-                            v-model:page-size="item.pageSize"
-                            :page-sizes="[5, 10, 20, 30, 50, item.tableList.length < 100 ? 100 : item.tableList.length]"
-                            layout="total, sizes, prev, pager, next, jumper" :total="item.tableList.length">
-                        </el-pagination>
-                    </div>
+                    </template>
                 </div>
                 <div v-else-if="(item.dataType == '7')  && item.childList" class="pad-10" >
                     <el-table border class="table"
                         :data="item.tableList.slice((item.page - 1) * item.pageSize, (item.page - 1) * item.pageSize + item.pageSize)"
                         :scrollbar-always-on='item.tableWidth > item.contentWidth ? true : false'>
                         <el-table-column v-for="(val, ind) in item.childList" :key="ind" :prop="val.showName"
-                            :width="item.tableWidth > item.contentWidth ? (val.showNameNew.length * 7 + 24) : 'auto'">
+                            :min-width="getColumnHeaderWidth(val.showNameNew)">
                             <template #header>
-                                <div>{{ val.showNameNew }}</div>
+                                <div :title="val.showNameNew">{{ val.showNameNew }}</div>
                             </template>
                             <template #default="scope">
                                 <p class="ellipsis-multiline" style="cursor: pointer">
@@ -91,18 +159,64 @@
                 </div>
                 <div v-else-if="item.dataType == '5' && item.filedList && item.filedList.length > 0"
                     class="dis-flex flex-d pad-t-10 pad-b-10 pad-r-20 pad-l-20">
-                    <div v-for="(obj,key) in item.filedList" :key="key" style="border:1px dashed #ccc;padding:10px;padding-top:0;border-radius:10px;">
-                        <div class="fts-12" style="color:var(--el-theme-color);padding:10px 0">{{obj.name}}</div>
-                        <ul>
-                            <li v-for="(obj1,key1) in obj.data" :key="key" >
-                                <p class="p_box fts-12 text-w-400 pad-l-16">
-                                    <span class="lable3">{{capitalizeFirstLetter(key1) }}</span>
-                                    <b class="b"></b>
-                                    <span class="span_value" v-html="obj1 ? obj1 : ''"></span>
-                                </p>
-                            </li>
-                        </ul>
-                    </div>
+                    <template v-if="item.filedList.length > 1">
+                        <div class="strain-switcher mar-b-10">
+                            <template v-if="item.filedList.length <= MAX_VISIBLE_STRAINS">
+                                <el-radio-group
+                                    :model-value="getSelectedStrainIndex(getBlockKey(index))"
+                                    @update:model-value="(i) => setSelectedStrainIndex(getBlockKey(index), i)"
+                                    size="small">
+                                    <el-radio-button
+                                        v-for="(obj, fi) in item.filedList"
+                                        :key="fi"
+                                        :label="fi">
+                                        {{ obj.name }}
+                                    </el-radio-button>
+                                </el-radio-group>
+                            </template>
+                            <template v-else>
+                                <span class="strain-label">{{ (i18n === 'zh' ? '选择菌株：' : 'Strain: ') }}</span>
+                                <el-select
+                                    :model-value="getSelectedStrainIndex(getBlockKey(index))"
+                                    @update:model-value="(i) => setSelectedStrainIndex(getBlockKey(index), i)"
+                                    size="small"
+                                    class="strain-select"
+                                    :placeholder="i18n === 'zh' ? '请选择菌株' : 'Select strain'">
+                                    <el-option
+                                        v-for="(obj, fi) in item.filedList"
+                                        :key="fi"
+                                        :label="obj.name"
+                                        :value="fi" />
+                                </el-select>
+                            </template>
+                        </div>
+                        <div v-if="getSelectedFiledItem(item, index)" style="border:1px dashed #ccc;padding:10px;padding-top:0;border-radius:10px;">
+                            <div class="fts-12" style="color:var(--el-theme-color);padding:10px 0">{{ getSelectedFiledItem(item, index).name }}</div>
+                            <ul>
+                                <li v-for="(obj1,key1) in getSelectedFiledItem(item, index).data" :key="key1">
+                                    <p class="p_box fts-12 text-w-400 pad-l-16">
+                                        <span class="lable3">{{ capitalizeFirstLetter(key1) }}</span>
+                                        <b class="b"></b>
+                                        <span class="span_value" v-html="obj1 ? obj1 : ''"></span>
+                                    </p>
+                                </li>
+                            </ul>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <div v-for="(obj,key) in item.filedList" :key="key" style="border:1px dashed #ccc;padding:10px;padding-top:0;border-radius:10px;">
+                            <div class="fts-12" style="color:var(--el-theme-color);padding:10px 0">{{obj.name}}</div>
+                            <ul>
+                                <li v-for="(obj1,key1) in obj.data" :key="key1">
+                                    <p class="p_box fts-12 text-w-400 pad-l-16">
+                                        <span class="lable3">{{capitalizeFirstLetter(key1) }}</span>
+                                        <b class="b"></b>
+                                        <span class="span_value" v-html="obj1 ? obj1 : ''"></span>
+                                    </p>
+                                </li>
+                            </ul>
+                        </div>
+                    </template>
                 </div>
                 <div v-else-if="item.dataType=='9' && item.tableList && item.tableList.length > 0">
                     <div class="dis-flex pad-15">
@@ -147,7 +261,7 @@
                     </div>
                 </div>
                 <template v-else>
-                    <list-item v-if="item.childList" :items="item.childList" />
+                    <detail-content v-if="item.childList" :items="item.childList" :parent-key="getBlockKey(index)" />
                 </template>
             </li>
             <li v-else></li>
@@ -166,14 +280,41 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
-import Dagre from './dagre.vue';
+defineOptions({ name: 'DetailContent' })
+import { onMounted, computed, ref } from 'vue';
+import Dagre from './DagreGraph.vue';
 import { useLanguageStore } from '@/store/modules/language';
 
 const languageStore = useLanguageStore()
 const i18n = computed(() => languageStore.i18n)
-const props = defineProps(['items'])
+const props = defineProps({
+  items: { type: Array, default: () => [] },
+  parentKey: { type: String, default: '' }
+})
 
+// 菌株切换：≤4 个用按钮，>4 个用下拉；下拉宽度适中
+const MAX_VISIBLE_STRAINS = 4
+// 每个导航条目下多 strain 时，当前选中的 strain 下标（key = blockKey）
+const selectedStrainByKey = ref({})
+function getBlockKey(index) {
+  return props.parentKey === '' ? String(index) : `${props.parentKey}-${index}`
+}
+function getSelectedStrainIndex(blockKey) {
+  return selectedStrainByKey.value[blockKey] ?? 0
+}
+function setSelectedStrainIndex(blockKey, index) {
+  selectedStrainByKey.value = { ...selectedStrainByKey.value, [blockKey]: index }
+}
+function getSelectedStr(item, index) {
+  if (!item.tableList || !item.tableList.length) return null
+  const i = getSelectedStrainIndex(getBlockKey(index))
+  return item.tableList[i] || item.tableList[0]
+}
+function getSelectedFiledItem(item, index) {
+  if (!item.filedList || !item.filedList.length) return null
+  const i = getSelectedStrainIndex(getBlockKey(index))
+  return item.filedList[i] || item.filedList[0]
+}
 
 const nodeData=ref([{
     name:'Process',
@@ -244,6 +385,13 @@ const capitalizeFirstLetter = (string) => {
     return string.replace(/\b[a-z]/g, function (match) {
         return match.toUpperCase();
     });
+}
+// 列头左对齐，宽度 = 列头文本长度(px) + 右侧留白 + 单元格内边距
+// 英文约9px/字符，中文约16px/字符，右侧留白10px，单元格默认左右各12px
+const getColumnHeaderWidth = (text) => {
+    if (!text) return 34
+    const textWidth = [...String(text)].reduce((sum, c) => sum + (c.charCodeAt(0) > 127 ? 16 : 9), 0)
+    return textWidth + 10 + 24  // 10右侧留白 + 24单元格左右内边距
 }
 const gobasic = (e) => {
     if (e.url) {
@@ -381,20 +529,29 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
+::v-deep .el-table th.el-table__cell {
+    background-color: #DFFBEF !important;
+}
 ::v-deep .el-table th.el-table__cell>.cell {
-    background-color: #DFFBEF;
     color: #666666;
     width: 100%;
-    height: 300%;
+    min-height: 100%;
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    font-size: 15px;
+    font-weight: 600;
 
     &>div {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        white-space: normal;
+        word-wrap: break-word;
+        word-break: break-word;
+        line-height: 1.35;
     }
+}
+/* 表格内容单元格字体略小于列头 */
+::v-deep .el-table td.el-table__cell>.cell {
+    font-size: 13px;
 }
 
 li {
@@ -517,5 +674,54 @@ li {
 .active{
     background: var(--el-theme-color);
     color:#fff;
+}
+
+.strain-switcher {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.strain-switcher :deep(.el-radio-group) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+/* 圆角与边框：小圆角、细边框，每个按钮独立圆角 */
+.strain-switcher :deep(.el-radio-button) {
+  margin: 0;
+}
+.strain-switcher :deep(.el-radio-button__inner) {
+  padding: 6px 14px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 13px;
+  transition: border-color 0.2s, color 0.2s, background-color 0.2s;
+}
+.strain-switcher :deep(.el-radio-button:not(.is-active) .el-radio-button__inner:hover) {
+  border-color: var(--el-theme-color);
+  color: var(--el-theme-color);
+}
+.strain-switcher :deep(.el-radio-button.is-active .el-radio-button__inner) {
+  border-color: var(--el-theme-color);
+  background: color-mix(in srgb, var(--el-theme-color) 12%, transparent);
+  color: var(--el-theme-color);
+  box-shadow: none;
+}
+.strain-switcher :deep(.el-radio-button__original-radio:checked + .el-radio-button__inner) {
+  box-shadow: none;
+}
+.strain-label {
+  font-size: 12px;
+  color: #666;
+  margin-right: 6px;
+}
+.strain-select {
+  width: 200px;
+  max-width: 100%;
+}
+.strain-select :deep(.el-input__wrapper) {
+  padding: 4px 10px;
+  border-radius: 6px;
 }
 </style>

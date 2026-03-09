@@ -194,6 +194,7 @@ function setLayout() {
   padding: 0 80px;
   display: flex;
   box-shadow: 0px 0px 12px var(--boxshadow);
+  font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
   // position: fixed;
   // top: 0;
   // right: 0;

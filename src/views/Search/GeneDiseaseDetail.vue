@@ -22,7 +22,7 @@
                 Genome Browser</div>
             </div>
             <div ref="xqcontent" class="content" v-loading='listLoading'>
-              <listItem :items="proteinData" ref="listbox"></listItem>
+              <DetailContent :items="proteinData" ref="listbox"></DetailContent>
             </div>
           </el-col>
         </el-row>
@@ -41,9 +41,9 @@
 </template>
 
 <script setup>
-import Search from "./search.vue";
+import Search from "./SearchBar.vue";
+import DetailContent from './DetailContent.vue'
 import { ref } from "vue";
-import listItem from './listItem.vue'
 import { getgeneData, getdiseaseData } from '@/api/data.js'
 import bac from '@/assets/images/search/bac.png'
 import Bottom from "@/layout/components/Bottom/index.vue"

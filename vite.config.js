@@ -42,9 +42,11 @@ export default defineConfig(({ mode, command }) => {
           changeOrigin: true,
           rewrite: (p) => p.replace(/^\/task-api/, ""),
         },
+        // 基因组浏览器 TSV/接口：本地开发走代理避免 CORS，生产由 genbro 直连
         "/gb-api": {
-          target: 'http://47.94.229.231:8000',
+          target: 'https://www.imicap.com:8443',
           changeOrigin: true,
+          secure: false,
           rewrite: (p) => p.replace(/^\/gb-api/, ""),
         },
         "/svg": {

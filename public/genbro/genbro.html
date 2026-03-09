@@ -23,62 +23,43 @@
 <body>
 	<div class="gbControl hide">
 		<div class="gbSeparator">&nbsp;</div>
-		<div class="banner">
-			<span class="browserLabel">Genome Explorer</span>
-			<div class="title centered">
-				<label class="searchLabel">Search in Genome Explorer:</label>
-				<span class="searchContainer">
-					<input type="search" class="searchBox" autocomplete="off" autocorrect="off" autocapitalize="off"
-						spellcheck="false" placeholder="Gene, base coordinate, or base 'start - end' range" />
-					<i class="fas fa-search"></i>
+		<header class="gbHeader">
+			<!-- Section 1: Title -->
+			<div class="gbHeader-section gbHeader-titleSection">
+			</div>
+			<!-- Section 2: Search + primary/secondary actions -->
+			<div class="gbHeader-section gbHeader-actionsSection">
+				<div class="gbHeader-searchWrap">
+					<i class="fas fa-search gbHeader-searchIcon"></i>
+					<input type="search" class="searchBox" id="gbSearchInput" autocomplete="off" autocorrect="off" autocapitalize="off"
+						spellcheck="false" placeholder="Gene, base coordinate, or start-end range" />
+				</div>
+				<button type="button" id="exploreGenome" class="gbHeader-btnPrimary" title="Search / go to gene or region">Explore Genome</button>
+				<div class="gbHeader-secondaryActions">
+					<button type="button" id="browse" class="gbHeader-btnText" title="Browse a different replicon or start a comparative genome browse.">Browse</button>
+					<button type="button" id="seqselect" class="gbHeader-btnText" title="Get sequence region."><i class="fas fa-download"></i> Get Sequence</button>
+					<button type="button" id="tracks" class="gbHeader-btnText" title="Track dialog."><i class="fas fa-chart-line"></i> Tracks</button>
+					<button type="button" id="legend" class="gbHeader-btnText" title="Legend & filter."><i class="fas fa-info-circle"></i> Filter</button>
+					<button type="button" id="qhelp" class="gbHeader-btnText" title="Quick help."><i class="fas fa-question-circle"></i> Help</button>
+				</div>
+				<span class="speedBar hide">
+					<i class="fas fa-minus"></i>
+					<span id="speed"><hr><span id="speedVel"></span> <i class="fas fa-caret-up"></i></span>
+					<i class="fas fa-plus"></i>
 				</span>
 			</div>
-		</div>
-		<div class="title">
-			<span class="centered">
-
-				<button id="browse"
-					title="Browse a different replicon or start a comparative genome browse.">Browse</button>
-
-				<button title="Visually scans through the genome at a rate controlled by the mouse." class='hide'
-					id="play"><i class="fas fa-play"></i><span>Auto Scroll</span></button>
-				<button id="seqselect"
-					title="Specify a region of nucleotide or amino-acid sequence for downloading to a file or insertion on the clipboard."><i
-						class="fas fa-download"></i>Get Sequence</button>
-
-				<button id="legend"
-					title="Pop up a legend explaining the graphical symbols used in the browser, and enable/disable display of these symbols."><i
-						class="fas fa-info-circle"></i>Legend & Filter</button>
-
-				<button id="qhelp" title="Shows a set of basic usage tips for the genome browser."><i
-						class="fas fa-question-circle"></i>Quick Help</button>
-
-				<button id="tracks" title="Pop up a track dialog add/remove/control display of track data."><i
-						class="fas fa-chart-line"></i><span>Tracks</span></button>
-
-			</span>
-			<span class="speedBar hide">
-				<i class="fas fa-minus"></i>
-				<span id="speed">
-					<hr><span id="speedVel"></span> <i class="fas fa-caret-up"></i>
-				</span>
-				<i class="fas fa-plus"></i>
-			</span>
-
-		</div>
-
-		<div class="title">
-			<span class="centered">
-				<span class="zoomlevels">
-					<label> zoom level: </label>
-					<span id="genome">Genome</span> |
-					<span id="operons"> Operons </span> |
-					<span id="genes" class='active'> Genes </span> |
-					<span id="sites"> Sites </span> |
-					<span id="sequence"> Sequence </span>
-				</span>
-			</span>
-		</div>
+			<!-- Section 3: View mode tabs -->
+			<div class="gbHeader-section gbHeader-tabsSection">
+				<nav class="zoomlevels" role="tablist">
+					<span id="genome" role="tab">Genome</span>
+					<span id="operons" role="tab">Operons</span>
+					<span id="genes" class="active" role="tab">Genes</span>
+					<span id="sites" role="tab">Sites</span>
+					<span id="sequence" role="tab">Sequence</span>
+				</nav>
+			</div>
+		</header>
+		<button title="Visually scans through the genome at a rate controlled by the mouse." class="hide" id="play"><i class="fas fa-play"></i><span>Auto Scroll</span></button>
 
 		<div class="browseMenu popup dropmenu hidden">
 			<div id='browseRepl' onclick="GBMenu.OnNewRepl()">Browse New Single Replicon</div>

@@ -1,14 +1,29 @@
 <template>
-  <div class="app-container" style="height: calc(100% - 180px); overflow: auto;">
+  <div class="app-container" style="height: 100%; overflow: auto;">
     <div class="home">
-        <div class="home_List">
+        <div class="home_List" :class="{ 'is-collapsed': sidebarCollapsed }">
+            <!-- 收起时：展开按钮 + 新建对话（无 Logo） -->
             <div class="list_header mar-b-10">
-                <el-button type="primary" class="w-100p mar-b-10" @click="addMsg()" >
-                    <el-icon class="mar-r-10 fts-17"> <CirclePlusFilled /> </el-icon> {{i18n=='zh'?'新建对话':'New conversation'}}
-                </el-button>
-                <el-input v-model="historyValue" class="w-100p" size="default" :placeholder="i18n=='zh'?'搜索历史记录':'Search history'" :prefix-icon="Search" @input="historySearch()" />
+                <div class="sidebar_header_row">
+                    <el-tooltip :content="sidebarCollapsed ? (i18n=='zh'?'展开侧边栏':'Expand sidebar') : (i18n=='zh'?'收起侧边栏':'Collapse sidebar')" placement="right">
+                        <el-button :class="['sidebar_toggle', { 'sidebar_collapsed_btn': sidebarCollapsed }]" @click="toggleSidebar">
+                            <el-icon class="fts-18"><Expand v-if="sidebarCollapsed" /><Fold v-else /></el-icon>
+                        </el-button>
+                    </el-tooltip>
+                </div>
+                <template v-if="!sidebarCollapsed">
+                    <el-button type="primary" class="w-100p mar-b-10 btn_new_chat" @click="addMsg()" >
+                        <el-icon class="mar-r-10 fts-17"> <CirclePlusFilled /> </el-icon> {{i18n=='zh'?'新建对话':'New conversation'}}
+                    </el-button>
+                    <el-input v-model="historyValue" class="w-100p" size="default" :placeholder="i18n=='zh'?'搜索历史记录':'Search history'" :prefix-icon="Search" @input="historySearch()" />
+                </template>
+                <el-tooltip v-else :content="i18n=='zh'?'新建对话':'New conversation'" placement="right">
+                    <el-button type="primary" :class="['btn_new_chat_icon', { 'sidebar_collapsed_btn': sidebarCollapsed }]" @click="addMsg()" >
+                        <el-icon class="fts-17"><CirclePlusFilled /></el-icon>
+                    </el-button>
+                </el-tooltip>
             </div>
-            <div class="list_box">
+            <div class="list_box" v-show="!sidebarCollapsed">
                 <!-- <el-tooltip class="box-item" effect="dark" :content="i18n=='zh'?'清除所有历史会话。':'Clear all history sessions.'" placement="top">
                     <span @click="deleteHistory()" class="close">{{i18n=='zh'?'一键删除':'Delete All'}}</span>
                 </el-tooltip> -->
@@ -16,7 +31,7 @@
                     <div v-for="(item, index) in hisMsgList" :key="index" v-show="item.children.length">
                         <h6>{{ i18n == 'zh' ? item.name:item.enname }}</h6>
                         <ul>
-                            <li :class="[val.conversationId == listItemId ? 'active' : '']" v-for="(val, ind) in item.children" :key="index" @click="listClick(val)">
+                            <li :class="[val.conversationId == listItemId ? 'active' : '']" v-for="(val, ind) in item.children" :key="val.conversationId" @click="listClick(val)">
                                 <el-icon> <ChatDotSquare /> </el-icon>
                                 <p>{{ val.conversationName }}</p>
                                 <span>
@@ -30,7 +45,7 @@
             </div>
         </div>
         <div class="home_Cont">
-            <div class="message_box">
+            <div class="message_box" :class="{ input_center: msglist.length === 0 }">
                 <div class="message_cont" ref="messageCont">
                     <div class="message_list">
                         <template v-for="(item, index) in msglist" :key="index">
@@ -43,23 +58,29 @@
                                 </div>
                             </div>
                             <div class="message_item" v-if="item.type=='answer'">
-                                <div class="message_avatar">
-                                    <img src="../../assets/images/kfjqr.png" alt="" class="w-100p h-100p">
-                                </div>
-                                <div class="message_wrp">
-                                    <div class="thinkBox" v-if="item.thinkContent"  v-html="marked.parse(item.thinkContent)"></div>
-                                    <div class="markdown-box" v-html="item.textValue"></div>
-                                    <div>
-                                        <div class="dis-flex align-c mar-l-10 just-c-fe">
-                                            <el-tooltip class="box-item" :content="i18n=='zh'?'复制内容':'Copy content'" placement="top" trigger='hover' >
-                                                <el-button link :icon="CopyDocument" @click="copyText(item.message)" ></el-button>
-                                            </el-tooltip>
+                                <div class="message_wrp message_wrp_answer">
+                                    <div class="message_avatar">
+                                        <img src="@/assets/logo/AI_logo.png" alt="" class="w-100p h-100p">
+                                    </div>
+                                    <div class="message_wrp_content">
+                                        <div class="thinkBox" v-if="item.thinkContent"  v-html="marked.parse(item.thinkContent)"></div>
+                                        <div class="markdown-box" v-html="item.textValue"></div>
+                                        <div>
+                                            <div class="dis-flex align-c mar-l-10 just-c-fe">
+                                                <el-tooltip class="box-item" :content="i18n=='zh'?'复制内容':'Copy content'" placement="top" trigger='hover' >
+                                                    <el-button link :icon="CopyDocument" @click="copyText(item.message)" ></el-button>
+                                                </el-tooltip>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </template>
                     </div>
+                </div>
+                <div v-if="msglist.length === 0" class="empty_state_header">
+                    <img src="@/assets/logo/logo.png" alt="logo" class="empty_state_logo" />
+                    <span class="empty_state_text">{{ i18n == 'zh' ? '关于肠道菌群，今天想了解什么？' : 'What would you like to learn about gut microbiota today?' }}</span>
                 </div>
                 <div class="message_input" >
                     <div class="textarea">
@@ -75,6 +96,7 @@
                         <el-button v-else type="primary" style="border-radius: 50px;font-size:18px;cursor: pointer;" :color="sendDisabled ? '#d6d5de' : ''" :disabled="sendDisabled" @click="msgSend()" :icon="Promotion"></el-button>
                     </div>
                 </div>
+                <div class="input-disclaimer">{{ i18n == 'zh' ? '内容由AI生成，仅供参考' : 'Content generated by AI, for reference only' }}</div>
             </div>
             <div class="Affix" @click="gobottom">
                 <el-tooltip :content="i18n=='zh'?'直到最新':'To the latest'" effect="dark" placement="top">
@@ -89,8 +111,8 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, nextTick, onUnmounted } from "vue";
-import { Search, Promotion, PictureFilled, CopyDocument } from '@element-plus/icons-vue'
+import { ref, computed, watch, onMounted, nextTick, onUnmounted } from "vue";
+import { Search, Promotion, PictureFilled, CopyDocument, Fold, Expand, CirclePlusFilled, ChatDotSquare, Delete } from '@element-plus/icons-vue'
 import { userList,infoList,delconversation } from '@/api/chat'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import { marked } from 'marked';
@@ -133,6 +155,13 @@ const messageCont = ref(null)
 const msgBtnFlag = ref(false)
 const msgTextValue = ref('')
 let ctrlControll
+
+// 侧边栏收起状态（持久化到 localStorage）
+const sidebarCollapsed = ref(localStorage.getItem('qa-sidebar-collapsed') === '1')
+const toggleSidebar = () => {
+  sidebarCollapsed.value = !sidebarCollapsed.value
+  localStorage.setItem('qa-sidebar-collapsed', sidebarCollapsed.value ? '1' : '0')
+}
 
 
 
@@ -671,13 +700,63 @@ onUnmounted(() => {
 }
 
 .home_List {
-  width: 260px;
+  width: 320px;
+  min-width: 320px;
   height: 100%;
   background: #fff;
   display: flex;
   flex-direction: column;
   padding: 15px;
   padding-bottom: 20px;
+  transition: width 0.25s ease, min-width 0.25s ease, padding 0.25s ease;
+
+  &.is-collapsed {
+    width: 72px;
+    min-width: 72px;
+    padding: 12px 10px;
+    align-items: stretch;
+
+    .list_header {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+    }
+    .sidebar_header_row {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+      margin-bottom: 0;
+      width: 100%;
+    }
+    /* 收起时两个按钮宽度占满侧边栏，尺寸一致 */
+    .sidebar_collapsed_btn {
+      width: 100% !important;
+      min-width: 0 !important;
+      height: 44px !important;
+      padding: 0 !important;
+      border-radius: 10px !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      box-sizing: border-box !important;
+    }
+  }
+
+  .sidebar_header_row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 4px;
+    min-height: 32px;
+  }
+  .sidebar_toggle {
+    margin-left: auto;
+    padding: 4px;
+  }
+
   .close {
     cursor: pointer;
     color: #ff6f6f;
@@ -688,8 +767,13 @@ onUnmounted(() => {
     font-size: 12px;
   }
 
+  .list_header {
+    flex-shrink: 0;
+  }
+
   .list_box {
     flex: 1;
+    min-height: 0; /* 保证在 flex 布局中能正确计算高度并出现滚动条 */
     overflow-y: auto;
     position: relative;
 
@@ -742,7 +826,7 @@ onUnmounted(() => {
   flex: 1;
   overflow: hidden;
   background: #f7f8fc;
-  padding: 20px 120px 10px;
+  padding: 20px 12px 12px;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -768,10 +852,30 @@ onUnmounted(() => {
     display: flex;
     flex-direction: column;
 
+    &.input_center {
+      justify-content: center;
+
+      .message_cont {
+        flex: 0 0 0;
+        min-height: 0;
+        overflow: hidden;
+      }
+
+      .message_input {
+        margin-top: 0;
+      }
+    }
+
     .message_cont {
       flex: 1;
+      min-height: 0;
       overflow: hidden;
       overflow-y: auto;
+      /* 与输入框同宽、居中 */
+      width: 100%;
+      max-width: calc(100% * 5 / 7);
+      margin-left: auto;
+      margin-right: auto;
 
       .message_list {
         .message_item {
@@ -812,6 +916,31 @@ onUnmounted(() => {
             }
           }
 
+          /* 回答：头像放入内容块内，与文字左边缘对齐 */
+          .message_wrp_answer {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+
+            .message_avatar {
+              width: 32px;
+              height: 32px;
+              flex-shrink: 0;
+              margin-top: 0;
+              margin-right: 12px;
+              border-radius: 7px;
+              overflow: hidden;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+
+            .message_wrp_content {
+              flex: 1;
+              min-width: 0;
+            }
+          }
+
           .question {
             background: none;
             margin-bottom: 0;
@@ -838,12 +967,17 @@ onUnmounted(() => {
     }
 
     .message_input {
+      width: calc(100% * 5 / 7);
+      margin-left: auto;
+      margin-right: auto;
       background: #fff;
       padding: 10px;
       display: flex;
       flex-direction: column;
       border-radius: 10px;
-      margin-top: 15px;
+      margin-top: 0;
+      margin-bottom: 4px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
 
       .message_btn {
         display: flex;
@@ -892,6 +1026,34 @@ onUnmounted(() => {
       ::-webkit-scrollbar-thumb:hover {
         background: #a8a8a8;
         /* 悬停或活动状态下滑块的背景色 */
+      }
+    }
+
+    .input-disclaimer {
+      font-size: 12px;
+      color: #999;
+      margin-top: 2px;
+      text-align: center;
+    }
+
+    .empty_state_header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 0;
+      flex-shrink: 0;
+
+      .empty_state_logo {
+        width: 96px;
+        height: 96px;
+        object-fit: contain;
+      }
+
+      .empty_state_text {
+        font-size: 18px;
+        color: #555;
+        line-height: 1.5;
       }
     }
   }

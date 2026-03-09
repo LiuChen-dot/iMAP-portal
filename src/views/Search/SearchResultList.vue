@@ -21,7 +21,7 @@
 </template>
 
 <script setup>
-import Search from "./search.vue";
+import Search from "./SearchBar.vue";
 import { reactive, ref } from "vue";
 
 

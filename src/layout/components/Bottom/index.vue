@@ -2,7 +2,7 @@
   <div class="footer_page">
     <div class="footer">
       <div class="icon_list">
-        <div style="cursor: pointer;" @click="gotogw">
+        <div class="footer-logo" @click="gotogw">
           <img src="../../../assets/logo/logo1.png" alt="">
         </div>
       </div>
@@ -21,9 +21,9 @@
       <ul>
         <p>{{ $t("message.lxwm") }}</p>
         <li>{{ $t("message.gsmc") }}</li>
-        <li style="cursor: pointer;" @click="gotogw">{{ $t("message.gw") }}</li>
+        <li class="footer-link" @click="gotogw">{{ $t("message.gw") }}</li>
         <li>{{ $t("message.lxdh") }}</li>
-        <li style="cursor: pointer;" @click="goToOutLook">{{ $t("message.email") }}</li>
+        <li class="footer-link" @click="goToOutLook">{{ $t("message.email") }}</li>
       </ul>
     </div>
     <div class="filing-bar">
@@ -130,9 +130,39 @@ const links = {
       }
     }
 
+    .footer-logo {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+
+      &:active {
+        transform: scale(0.98);
+      }
+    }
+
     img {
       width: 150px;
       // height: 60px;
+    }
+  }
+
+  .footer-link {
+    cursor: pointer;
+    transition: color 0.25s ease, text-decoration 0.25s ease;
+    display: inline-block;
+
+    &:hover {
+      color: #fff !important;
+      text-decoration: underline;
+    }
+
+    &:active {
+      opacity: 0.9;
     }
   }
 

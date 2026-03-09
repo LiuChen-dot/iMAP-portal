@@ -12,35 +12,94 @@
       <!-- 内容 -->
       <div style="margin-top: 20px;">
         <el-row :gutter="20">
-          <el-col :span="5">
-            <ul class="list ov-h" ref="listtype">
-              <li v-show="item.dataType == '0' || (item.dataType == '2'|| item.dataType == '6'|| item.dataType == '5')"
-                :class="[lis_ind == index ? 'li_after' : '', !item.show && item.childList ? '' : 'no_click', 'w-100p', 'ov-h']"
-                v-for="(item, index) in proteinleftTitle" :key="index" @click='listClick(index, item)'>
-                <span class="listLeft">{{ capitalizeFirstLetter(item.showNameNew) }}</span>
+          <el-col :span="sidebarCollapsed ? 1 : 5">
+            <div class="sidebar-wrapper" :class="{ 'is-fixed': isSidebarFixed }" ref="listtype">
+              <el-button
+                v-if="sidebarCollapsed && !listLoading"
+                class="sidebar-toggle-btn collapsed"
+                type="primary"
+                circle
+                @click="sidebarCollapsed = false; resetSidebarWidth()"
+                title="展开导航栏"
+              >
+                <el-icon><Expand /></el-icon>
+              </el-button>
+              <template v-else>
+                <el-button
+                  v-if="!listLoading"
+                  class="sidebar-toggle-btn expanded"
+                  type="default"
+                  circle
+                  size="small"
+                  @click="sidebarCollapsed = true"
+                  title="收起导航栏"
+                >
+                  <el-icon><Fold /></el-icon>
+                </el-button>
+                <h3 class="list-title">CONTENTS</h3>
                 <div
-                  :style="`${index == 0 || index == proteinleftTitle.length - 1 ? 'border-radius: 2px' : ''};${index == proteinleftTitle.length - 1 ? 'height:75%' : ''}`"
-                  class="leftline"></div>
-                <div class="showleftline" v-show="lis_ind == index"></div>
-              </li>
-            </ul>
+                  ref="listScrollWrapRef"
+                  class="list-scroll-wrap"
+                  @scroll="onNavListScroll"
+                >
+                  <ul class="list">
+                    <li v-show="item.dataType == '0' || (item.dataType == '2'|| item.dataType == '6'|| item.dataType == '5')"
+                      :class="[isFirstLevelActive(index) ? 'li_after' : '', !item.show && item.childList ? '' : 'no_click', 'w-100p', 'list-item-level1']"
+                      v-for="(item, index) in proteinleftTitle" :key="index" @click='listClick(index, item)'>
+                      <span class="listLeft">
+                        <span class="list-number">{{ index + 1 }}</span> {{ capitalizeFirstLetter(item.showNameNew) }}
+                      </span>
+                      <!-- 仅在有二级标题时显示箭头：收起为下箭头，展开为上箭头 -->
+                      <el-icon
+                        v-if="getSecondLevelNavItems(item).length"
+                        :class="['list-chevron', 'list-chevron-sub']"
+                        @click.stop="toggleSecondLevel(index)"
+                        :title="secondLevelExpanded[index] ? '收起二级目录' : '展开二级目录'"
+                      >
+                        <ArrowUp v-if="secondLevelExpanded[index]" />
+                        <ArrowDown v-else />
+                      </el-icon>
+                      <div
+                        :style="`${index == 0 || index == proteinleftTitle.length - 1 ? 'border-radius: 2px' : ''};${index == proteinleftTitle.length - 1 ? 'height:75%' : ''}`"
+                        class="leftline"></div>
+                      <div class="showleftline" v-show="isFirstLevelActive(index) && lis_sub_ind == null"></div>
+                      <!-- 二级标题：默认折叠，点击展开后显示 -->
+                      <ul v-if="getSecondLevelNavItems(item).length && secondLevelExpanded[index]" class="list list-level2" @click.stop>
+                        <li
+                          v-for="(sub, subIndex) in getSecondLevelNavItems(item)"
+                          :key="subIndex"
+                          :class="['list-item-level2', isSecondLevelActive(index, subIndex) ? 'li_after' : '']"
+                          @click="listClick(index, item, subIndex)">
+                          <span class="listLeft">
+                            {{ capitalizeFirstLetter(sub.showNameNew) }}
+                          </span>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+                <div v-show="showMoreMarker" class="nav-more-marker">
+                  <span class="nav-more-marker-text">↓ More</span>
+                </div>
+              </template>
+            </div>
           </el-col>
-          <el-col :span="19">
+          <el-col :span="sidebarCollapsed ? 23 : 19">
             <div style="display: flex;align-items: center;justify-content: space-between;">
               <h1 class="text-w-600 fts-20 pad-b-10"
                 style="font-family: 'Source Sans Pro', sans-serif;color:var(--el-theme-color);" v-html="protein_name">
               </h1>
             </div>
             <div ref="xqcontent" class="content" v-loading='listLoading'>
-              <listItem :items="proteinData" ref="listbox"></listItem>
+              <DetailContent :items="proteinData" ref="listbox"></DetailContent>
             </div>
           </el-col>
         </el-row>
       </div>
     </div>
     <el-row v-show="floorLoading" class="floorLoadingbox">
-      <el-col :span="5"> </el-col>
-      <el-col :span="19">
+      <el-col :span="sidebarCollapsed ? 1 : 5"> </el-col>
+      <el-col :span="sidebarCollapsed ? 23 : 19">
         <div class="floorLoading">
           加载中...
         </div>
@@ -51,15 +110,16 @@
 </template>
 
 <script setup>
-import Search from "./search.vue";
+import Search from "./SearchBar.vue";
 import { nextTick, onMounted, reactive, ref, watch } from "vue";
-import listItem from './listItem.vue'
+import DetailContent from './DetailContent.vue'
 import { getproteinData, getBasicInformationData,getGoData,getsmallMoleculeData,getrnaData } from '@/api/data.js'
 import { useRoute, useRouter } from 'vue-router'
 import { dataType } from "element-plus/es/components/table-v2/src/common";
 import { connect } from "echarts";
 import bac from '@/assets/images/search/bac.png'
 import Bottom from "@/layout/components/Bottom/index.vue"
+import { Fold, Expand, ArrowDown, ArrowUp } from '@element-plus/icons-vue'
 
 
 const router = useRouter();
@@ -78,8 +138,50 @@ const fourthload = ref([])
 const totalNum = ref(0)
 const proteinleftTitle = ref([])
 const lis_ind = ref(0)
+const lis_sub_ind = ref(null) // 当前高亮的二级标题在 getSecondLevelNavItems 中的下标，null 表示只高亮一级
 const protein_name = ref('')
 const floorLoading = ref(false)
+const sidebarCollapsed = ref(false)
+const isSidebarFixed = ref(false)
+const listScrollWrapRef = ref(null)
+const showMoreMarker = ref(false)
+// 哪些一级项展开了二级目录（key 为一级 index）
+const secondLevelExpanded = ref({})
+
+// 导航列表「还有更多」标记：仅在有滚动条且未滚到底时显示
+function checkScrollable() {
+  nextTick(() => {
+    const el = listScrollWrapRef.value
+    if (!el) return
+    const { scrollHeight, clientHeight, scrollTop } = el
+    const hasOverflow = scrollHeight > clientHeight
+    const isNearBottom = scrollTop + clientHeight >= scrollHeight - 8
+    showMoreMarker.value = hasOverflow && !isNearBottom
+  })
+}
+
+function onNavListScroll() {
+  checkScrollable()
+}
+
+// 展开侧边栏时重置宽度，避免文本被截断
+const resetSidebarWidth = () => {
+  nextTick(() => {
+    if (listtype.value && appcontainer.value) {
+      const scrollTop = appcontainer.value.scrollTop
+      if (scrollTop > 150) {
+        isSidebarFixed.value = true
+        listtype.value.style.width = '19%'
+        listtype.value.style.position = 'fixed'
+        listtype.value.style.top = '80px'
+      } else {
+        isSidebarFixed.value = false
+        listtype.value.style.width = '100%'
+        listtype.value.style.position = 'static'
+      }
+    }
+  })
+}
 const getproteinDataFun = () => {
   listLoading.value = true
   if (sessionStorage.getItem('zwType') == 'protein') {
@@ -270,7 +372,19 @@ const getproteinDataFun = () => {
   }
 
 }
+
 getproteinDataFun()
+
+// 导航列表内容或加载状态变化时，重新检测是否显示「还有更多」标记
+watch([proteinleftTitle, listLoading], () => nextTick(checkScrollable), { deep: true })
+
+// 侧栏固定状态变化时，列表区域尺寸可能变化，需重新检测
+watch(isSidebarFixed, () => nextTick(checkScrollable))
+
+onMounted(() => {
+  nextTick(checkScrollable)
+})
+
 const getName = (data, a) => {
   for (var i = 0; i < data.length; i++) {
     if (data[i].showName == a) {
@@ -437,6 +551,50 @@ const capitalizeFirstLetter = (string) => {
     return match.toUpperCase();
   });
 }
+
+// 取一级项下在导航中展示的二级标题（ind===2，且 dataType 与一级导航展示规则一致）
+function getSecondLevelNavItems(item) {
+  if (!item || !item.childList || !item.childList.length) return []
+  return item.childList.filter(
+    (child) =>
+      child.ind === 2 &&
+      (child.dataType === '0' || child.dataType === '2' || child.dataType === '6' || child.dataType === '5')
+  )
+}
+
+// 切换一级项下二级目录的展开/收起
+function toggleSecondLevel(index) {
+  secondLevelExpanded.value = {
+    ...secondLevelExpanded.value,
+    [index]: !secondLevelExpanded.value[index]
+  }
+}
+
+// 一级是否高亮（当前所在块属于该一级）
+function isFirstLevelActive(index) {
+  return lis_ind.value === index
+}
+
+// 二级是否高亮
+function isSecondLevelActive(parentIndex, subIndex) {
+  return lis_ind.value === parentIndex && lis_sub_ind.value === subIndex
+}
+
+// 根据 data-nav-key 解析为导航高亮状态：key 可能为 "0" 或 "0-1"
+function keyToNavHighlight(key) {
+  if (!key) return { firstIndex: 0, subIndex: null }
+  const parts = key.split('-').map(Number)
+  const firstIndex = parts[0]
+  if (parts.length === 1) return { firstIndex, subIndex: null }
+  const childListIndex = parts[1]
+  const parent = proteinleftTitle.value[firstIndex]
+  if (!parent || !parent.childList || childListIndex >= parent.childList.length)
+    return { firstIndex, subIndex: null }
+  const navItems = getSecondLevelNavItems(parent)
+  const child = parent.childList[childListIndex]
+  const subIndex = navItems.indexOf(child)
+  return { firstIndex, subIndex: subIndex >= 0 ? subIndex : null }
+}
 const filterdataShow = (data) => {
   var res = true
   for (var i = 0; i < data.length; i++) {
@@ -455,7 +613,7 @@ const isScrollingFromClick = ref(false)
 let secondloadisload = false
 let thirdloadisload = false
 let fourthloadisload = false
-const listClick = (ind, e) => {
+const listClick = (ind, e, subInd) => {
   if (e.show) {
     return;
   }
@@ -510,9 +668,64 @@ const listClick = (ind, e) => {
 
       isScrollingFromClick.value = true;
       lis_ind.value = ind
-      appcontainer.value.scrollTop = listbox.value.$el.children[ind].offsetTop
+      lis_sub_ind.value = subInd ?? null
+      if (subInd != null) {
+        secondLevelExpanded.value = { ...secondLevelExpanded.value, [ind]: true }
+      }
+      // 点击二级标题时滚动到该二级块，否则滚动到一级块（统一用视口坐标计算，避免 offsetTop 导致主内容乱滚）
+      const scrollTargetEl = getScrollTargetElement(ind, e, subInd)
+      if (scrollTargetEl) {
+        scrollToElement(appcontainer.value, scrollTargetEl, 100)
+      } else {
+        const firstEl = listbox.value?.$el?.children?.[ind]
+        if (firstEl) scrollToElement(appcontainer.value, firstEl, 100)
+      }
+      scrollNavToIndex(ind, lis_sub_ind.value)
     }
   }, 0);
+}
+
+// 根据一级索引、一级项、二级在导航中的下标，得到要滚动到的 DOM 元素（二级块或一级块）
+function getScrollTargetElement(firstIndex, firstItem, subIndex) {
+  if (subIndex == null || !firstItem?.childList) {
+    return listbox.value?.$el?.children?.[firstIndex] ?? null
+  }
+  const navItems = getSecondLevelNavItems(firstItem)
+  const subItem = navItems[subIndex]
+  if (!subItem) return listbox.value?.$el?.children?.[firstIndex] ?? null
+  const childListIndex = firstItem.childList.indexOf(subItem)
+  if (childListIndex < 0) return listbox.value?.$el?.children?.[firstIndex] ?? null
+  const key = `${firstIndex}-${childListIndex}`
+  const el = appcontainer.value?.querySelector?.(`[data-nav-key="${key}"]`)
+  return el || listbox.value?.$el?.children?.[firstIndex] || null
+}
+
+// 将滚动容器滚动到使目标元素出现在视口内（距顶部约 offsetFromTop）
+function scrollToElement(container, element, offsetFromTop = 100) {
+  if (!container || !element) return
+  const elRect = element.getBoundingClientRect()
+  const containerRect = container.getBoundingClientRect()
+  const delta = elRect.top - containerRect.top
+  container.scrollTop += delta - offsetFromTop
+}
+
+// 将左侧导航列表滚动到指定索引项（及二级项），仅滚动左侧导航容器，避免带动主内容区
+function scrollNavToIndex(ind, subInd) {
+  if (ind < 0 || !listScrollWrapRef.value) return
+  nextTick(() => {
+    const wrap = listScrollWrapRef.value
+    const listEl = wrap.querySelector('.list')
+    const firstLi = listEl?.children[ind]
+    if (!firstLi) return
+    const target = subInd != null ? firstLi.querySelectorAll('.list-item-level2')[subInd] : null
+    const el = target || firstLi
+    const wrapRect = wrap.getBoundingClientRect()
+    const elRect = el.getBoundingClientRect()
+    const delta = elRect.top - wrapRect.top
+    const padding = 24
+    const newScrollTop = wrap.scrollTop + delta - padding
+    wrap.scrollTop = Math.max(0, Math.min(newScrollTop, wrap.scrollHeight - wrap.clientHeight))
+  })
 }
 
 
@@ -528,21 +741,45 @@ const handleScroll = (event) => {
     fourthloadisload = true
   }
 
-  if (event.target.scrollTop > 150) {
-    listtype.value.style.width = '19%'
-    listtype.value.style.position = 'fixed'
-    listtype.value.style.top = '80px'
-  } else {
-    listtype.value.style.width = '100%'
-    listtype.value.style.position = 'static'
+  if (listtype.value) {
+    if (event.target.scrollTop > 150) {
+      isSidebarFixed.value = true
+      listtype.value.style.width = sidebarCollapsed.value ? '40px' : '19%'
+      listtype.value.style.position = 'fixed'
+      listtype.value.style.top = '80px'
+    } else {
+      isSidebarFixed.value = false
+      listtype.value.style.width = '100%'
+      listtype.value.style.position = 'static'
+    }
   }
   if (isScrollingFromClick.value) {
     isScrollingFromClick.value = false;
     return;
   }
-  var ind = [...listbox.value.$el.children].findIndex(val => val.offsetTop > event.target.scrollTop - val.offsetHeight + 300)
-  lis_ind.value = ind
-
+  // 根据右侧带 data-nav-key 的块与视口位置，高亮对应的一级或二级导航
+  const container = event.target
+  const containerRect = container.getBoundingClientRect()
+  const threshold = containerRect.top + 180
+  const anchors = container.querySelectorAll('[data-nav-key]')
+  let currentEl = null
+  for (const el of anchors) {
+    if (el.getBoundingClientRect().top <= threshold) currentEl = el
+  }
+  if (currentEl) {
+    const key = currentEl.getAttribute('data-nav-key')
+    const { firstIndex, subIndex } = keyToNavHighlight(key)
+    lis_ind.value = firstIndex
+    // 仅当用户已手动展开该一级的二级目录时，才高亮二级标题；否则只高亮一级
+    const useSubHighlight = subIndex != null && secondLevelExpanded.value[firstIndex]
+    lis_sub_ind.value = useSubHighlight ? subIndex : null
+    scrollNavToIndex(firstIndex, useSubHighlight ? subIndex : null)
+  } else {
+    const ind = [...listbox.value.$el.children].findIndex(val => val.offsetTop > event.target.scrollTop - val.offsetHeight + 300)
+    lis_ind.value = ind >= 0 ? ind : 0
+    lis_sub_ind.value = null
+    scrollNavToIndex(lis_ind.value, null)
+  }
 }
 
 
@@ -601,22 +838,152 @@ const handleScroll = (event) => {
   color: #000;
 }
 
-.list {
-  list-style: none;
-  line-height: 20px;
+.sidebar-wrapper {
+  position: relative;
+}
+
+.sidebar-wrapper.is-fixed {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.sidebar-wrapper.is-fixed .list-title {
+  flex-shrink: 0;
+}
+
+.sidebar-toggle-btn {
+  &.collapsed {
+    margin: 10px 0;
+    width: 36px;
+    height: 36px;
+  }
+
+  &.expanded {
+    margin-bottom: 12px;
+    vertical-align: top;
+  }
+}
+
+.list-title {
+  font-family: 'Source Sans Pro', sans-serif;
   font-size: 12px;
   font-weight: 600;
+  color: #666;
+  margin: 0 0 12px 20px;
+  letter-spacing: 0.5px;
+}
+
+/* 导航列表可滚动区域；固定时占满剩余高度 */
+.list-scroll-wrap {
+  position: relative;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 4px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.sidebar-wrapper.is-fixed .list-scroll-wrap {
+  flex: 1;
+  min-height: 0;
+  max-height: calc(100vh - 180px);
+}
+
+/* 出现滚动条时底部「还有更多」标记（放在滚动容器外，避免参与 scrollHeight 导致常驻显示） */
+.nav-more-marker {
+  flex-shrink: 0;
+  left: 0;
+  right: 6px;
+  padding: 6px 12px 10px;
+  background: linear-gradient(to top, rgba(255,255,255,0.98) 0%, rgba(255,255,255,0.85) 60%, transparent 100%);
+  text-align: center;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.nav-more-marker-text {
+  font-size: 11px;
+  color: var(--el-theme-color);
+  font-weight: 500;
+}
+
+.list-scroll-wrap::-webkit-scrollbar {
+  width: 6px;
+}
+
+.list-scroll-wrap::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 3px;
+}
+
+.list-scroll-wrap::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.list-scroll-wrap::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+.list {
+  font-family: 'Source Sans Pro', sans-serif;
+  list-style: none;
+  line-height: 28px;
+  font-size: 16px;
+  font-weight: 400;
+  padding-top: 4px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 
   li {
-    line-height: 25px;
-    padding-left: 20px;
+    line-height: 28px;
+    padding: 6px 20px;
     cursor: pointer;
     position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 0;
+      height: 1px;
+      background: #f0f0f0;
+    }
+
+    &:last-child::after {
+      display: none;
+    }
+  }
+
+  .list-number {
+    margin-right: 4px;
+    flex-shrink: 0;
+  }
+
+  .list-chevron {
+    flex-shrink: 0;
+    font-size: 11px;
+    color: #bbb;
+    margin-top: 4px;
+  }
+
+  .list-chevron-sub {
+    cursor: pointer;
+    &:hover {
+      color: var(--el-theme-color);
+    }
   }
 
   .li_after {
     position: relative;
     color: var(--el-theme-color);
+    background: #f0f9eb; /* 选中项浅色背景，与主题色协调 */
+    background: color-mix(in srgb, var(--el-theme-color) 10%, transparent);
   }
 
   .leftline {
@@ -644,16 +1011,48 @@ const handleScroll = (event) => {
   }
 }
 
+/* 一级项作为容器时保留底部边框 */
+.list-item-level1 {
+  flex-wrap: wrap;
+}
+
+/* 二级标题列表 */
+.list-level2 {
+  width: 100%;
+  padding: 2px 0 4px 0;
+  margin: 0;
+  margin-left: 8px;
+  padding-left: 12px;
+  border-left: 1px solid #e8e8e8;
+  list-style: none;
+}
+
+.list-item-level2 {
+  padding: 2px 0 2px 0;
+  line-height: 22px;
+  font-size: 13px;
+  color: #666;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--el-theme-color);
+  }
+
+  &::after {
+    display: none;
+  }
+}
+
 .no_click {
   color: #ccc;
 }
 
 .listLeft {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  display: inline-block;
-  width: 100%;
+  flex: 1;
+  min-width: 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
 }
 
 .floorLoadingbox {

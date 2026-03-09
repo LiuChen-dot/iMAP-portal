@@ -1,5 +1,5 @@
 <template>
-  <div :class="['app-container', listValue == 'taxonomy' ? 'ov-h' : '']" @scroll="handleScroll"  style="height: calc(100% - 180px); overflow: auto;">
+  <div :class="['app-container', listValue == 'taxonomy' ? 'ov-h' : '']" @scroll="handleScroll"  style="height: 100%; overflow: auto;">
     <el-card :class="[listValue == 'taxonomy' ? 'cardCont' : '']" style="border: none;">
       <!-- 搜索框 -->
       <div class="mar-t-30" style="position: relative;z-index: 998;">
@@ -65,7 +65,7 @@
 </template>
 <script setup>
 import { nextTick, onMounted, onBeforeUnmount, reactive, ref, watch } from "vue";
-import Search from "./search.vue";
+import Search from "./SearchBar.vue";
 import { useRoute, useRouter } from 'vue-router'
 import { searchByPage, getsearchAggregation } from '@/api/data.js'
 import treeChart from '@/views/treeChart/treeChart/App'
@@ -433,7 +433,7 @@ onBeforeUnmount(() => {
         width: 75%;
         margin: 0 auto;
         box-sizing: border-box;
-        font-size: 14px;
+        font-size: 17px;
         line-height: 40px;
         display: flex;
         justify-content: center;

@@ -143,7 +143,7 @@ export const constantRoutes = [{
   // }
 //  ]
 //},
- // 不附带二级页面的16S功能
+ // 16S：项目概况(独立页) + 分析流程(单页工作台) + 导出测序报告(按钮)
 {
     path: '',
     component: Layout,
@@ -151,11 +151,16 @@ export const constantRoutes = [{
       path: "/16S",
       component: () => import("@/views/16S/index"),
       name: "16S",
+      redirect: "/16S/overview",
       meta: {
         title: "sixteenS16s",
         icon: "menu4",
         affix: true,
       },
+      children: [
+        { path: "overview", name: "16SOverview", component: () => import("@/views/16S/Overview") },
+        { path: "analysis", name: "16SAnalysis", component: () => import("@/views/16S/AnalysisWorkflow") },
+      ],
     }]
  },
 {
@@ -244,7 +249,7 @@ export const constantRoutes = [{
   hidden: true,
   children: [{
     path: "/SearchList",
-    component: () => import("@/views/Search/SearchList"),
+    component: () => import("@/views/Search/SearchResultList"),
     name: "SearchList",
   }]
 },
@@ -254,7 +259,7 @@ export const constantRoutes = [{
   hidden: true,
   children: [{
     path: "/protein",
-    component: () => import("@/views/Search/protein"),
+    component: () => import("@/views/Search/EntityDetail"),
     name: "protein",
   }]
 },
@@ -264,7 +269,7 @@ export const constantRoutes = [{
   hidden: true,
   children: [{
     path: "/basic_information",
-    component: () => import("@/views/Search/protein"),
+    component: () => import("@/views/Search/EntityDetail"),
     name: "basic_information",
   }]
 },
@@ -274,7 +279,7 @@ export const constantRoutes = [{
   hidden: true,
   children: [{
     path: "/go_terms",
-    component: () => import("@/views/Search/protein"),
+    component: () => import("@/views/Search/EntityDetail"),
     name: "go_terms",
   }]
 },
@@ -284,7 +289,7 @@ export const constantRoutes = [{
   hidden: true,
   children: [{
     path: "/Gene",
-    component: () => import("@/views/Search/Gene"),
+    component: () => import("@/views/Search/GeneDiseaseDetail"),
     name: "Gene",
   }]
 },
@@ -294,7 +299,7 @@ export const constantRoutes = [{
   hidden: true,
   children: [{
     path: "/disease",
-    component: () => import("@/views/Search/Gene"),
+    component: () => import("@/views/Search/GeneDiseaseDetail"),
     name: "disease",
   }]
 },
@@ -304,7 +309,7 @@ export const constantRoutes = [{
   hidden: true,
   children: [{
     path: "/small_molecule",
-    component: () => import("@/views/Search/protein"),
+    component: () => import("@/views/Search/EntityDetail"),
     name: "small_molecule",
   }]
 },
@@ -314,7 +319,7 @@ export const constantRoutes = [{
   hidden: true,
   children: [{
     path: "/rna",
-    component: () => import("@/views/Search/protein"),
+    component: () => import("@/views/Search/EntityDetail"),
     name: "rna",
   }]
 },

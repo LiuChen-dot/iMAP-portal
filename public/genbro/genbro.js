@@ -198,6 +198,8 @@ var GB = {
 		gb.dom.search.onchange = this.OnSearch.bind(this);
 		gb.dom.search.onfocus = this.OnSearchInit.bind(this);
 		gb.dom.search.oninput = this.OnSearchInput.bind(this);
+		let btnExplore = gb.dom.controls.querySelector("#exploreGenome");
+		if (btnExplore) btnExplore.onclick = () => { gb.dom.search.dispatchEvent(new Event("change")); };
 		gb.dom.searchDropdown = gb.dom.controls.querySelector(".searchDropdown");
 		gb.dom.searchDropdown.onscroll = OnLazyScroll;
 		gb.dom.searchGenes = gb.dom.searchDropdown.querySelector(".searchGenes");
@@ -254,9 +256,9 @@ var GB = {
 
 		gb.dom.cmpDrag = gb.dom.controls.querySelector(".gbCmpDrag");
 
-		// load help menu content asynchronous
+		// load help menu content asynchronous (optional; may fail by CORS in local dev)
 		FetchFile("https://brg-preview.ai.sri.com/help.html?object=genome-browser-brief")
-			.then(content => gb.dom.qhelp.querySelector("#quickhelpcontent").innerHTML = content);
+			.then(content => { if (content && gb.dom.qhelp) gb.dom.qhelp.querySelector("#quickhelpcontent").innerHTML = content; });
 	},
 
 	InitBaseline(gb) {
@@ -2385,16 +2387,11 @@ var GB = {
 		//"https://brg-preview.ai.sri.com/ajax-replicon-genbro-colf?orgid=" + replicon.orgid + "&chromosome=" + replicon.chromosome;
 		let csv = [];
 		if (replicon.orgid && replicon.chromosome) {
-			// let url = '/gb-api/database/lishan_511145(COLI-K12).tsv'; //本地
-			let url=''
-			// console.log(replicon.centerGene,replicon.TaxId)
-			if(replicon.TaxId){
-				// url= `/gb-api/database/lishan_${replicon.TaxId}(${replicon.chromosome}).tsv`
-				url = `https://www.imicap.com:8443/database/lishan_${replicon.TaxId}(${replicon.chromosome}).tsv`
-			}else{
-				// url = '/gb-api/database/lishan_511145(COLI-K12).tsv'; //生产
-				url = 'https://www.imicap.com:8443/database/lishan_511145(COLI-K12).tsv'; //生产
-			}
+			const base = (gb.useGbApiPath ? '/gb-api' : (gb.dataBaseUrl || 'https://www.imicap.com:8443'));
+			const path = replicon.TaxId
+				? `/database/lishan_${replicon.TaxId}(${replicon.chromosome}).tsv`
+				: '/database/lishan_511145(COLI-K12).tsv';
+			let url = base + path;
 			// console.log(url)
 			if (this.gb.debug == 1)
 				url = this.gb.cache + replicon.orgid + "-" + replicon.chromosome + ".tsv";
@@ -3391,8 +3388,11 @@ var GB = {
 		}
 		SHOW(dropdown);
 		let bbox = search.getBoundingClientRect();
-		dropdown.style.top = bbox.bottom + "px";
-		dropdown.style.left = bbox.left - 200 + "px";
+		dropdown.style.position = "fixed";
+		dropdown.style.top = bbox.bottom + 4 + "px";
+		dropdown.style.left = Math.max(8, bbox.left - 200) + "px";
+		let spaceBelow = window.innerHeight - bbox.bottom - 16;
+		dropdown.style.maxHeight = Math.min(400, Math.max(120, spaceBelow)) + "px";
 		table.nvisible = 0;
 		LazyScroll(table, 200);
 		HIDE(this.gb.dom.marker);

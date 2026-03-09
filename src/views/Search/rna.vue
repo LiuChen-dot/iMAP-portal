@@ -87,9 +87,8 @@
 </template>
 
 <script setup>
-import Search from "./search.vue";
+import Search from "./SearchBar.vue";
 import { nextTick, reactive, ref } from "vue";
-import listItem from './listItem.vue'
 import { getrnaData,getsmallMoleculeData } from '@/api/data.js'
 import { useRoute, useRouter } from 'vue-router'
 import { useLanguageStore } from '@/store/modules/language';

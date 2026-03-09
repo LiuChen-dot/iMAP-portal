@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100%;overflow: scroll;overflow-x: hidden;">
+  <div class="home-page" style="height: 100%;overflow: scroll;overflow-x: hidden;">
     <div style="position: relative;">
       <el-carousel style="" height="657px" arrow="always">
         <el-carousel-item v-for="(item, index) in banner" :key="index">
@@ -156,7 +156,7 @@
 </template>
 
 <script setup>
-import Search from './Search/search.vue'
+import Search from './Search/SearchBar.vue'
 import { ref } from "vue";
 import { formatDate } from '@/utils/index'
 import { getsearchAggregation, platformAggregation } from '@/api/data.js'
@@ -168,9 +168,9 @@ import modulebox2 from '@/assets/images/home/modulebox2.svg'
 import modulebox3 from '@/assets/images/home/modulebox3.svg'
 import modulebox4 from '@/assets/images/home/modulebox4.svg'
 import modulebox5 from '@/assets/images/home/modulebox5.svg'
+import Bottom from "@/layout/components/Bottom/index.vue"
 import banner1 from '../assets/images/banner1.jpg'
 import banner2 from '../assets/images/banner2.jpg'
-import Bottom from "@/layout/components/Bottom/index.vue"
 import basic_information from '@/assets/images/home/basic_information.png'
 import Gene from '@/assets/images/home/Gene.png'
 import RNA from '@/assets/images/home/RNA.png'
@@ -249,6 +249,10 @@ const scrollToTop = () => {
 </script>
 
 <style lang="scss" scoped>
+.home-page {
+  font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
 .el-carousel__item h3 {
   color: #475669;
   opacity: 0.75;

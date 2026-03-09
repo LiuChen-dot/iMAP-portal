@@ -81,7 +81,7 @@ router.beforeEach((to, from, next) => {
       }
     }
   } else {
-    if (to.path == '/16S' || to.path=='/KnowledgeGraph'){
+    if (to.path.startsWith('/16S') || to.path === '/KnowledgeGraph'){
       ElMessage.warning({
             message: getI18nMessage('permission.pleaseLogin'),
             offset: 60  // 向下偏移60px，你可以根据需要调整这个数值

@@ -1,5 +1,5 @@
 <template>
-    <div style="height: 100%;overflow: auto;overflow-x: hidden;background-color: #EEF0F8;">
+    <div class="task-upload-page" style="height: 100%;overflow: auto;overflow-x: hidden;background-color: #EEF0F8;">
         <div class="pad-t-20 pad-l-20 pad-r-20 pad-b-20">
             <el-card>
                 <div class="dis-flex align-c just-c-sb">
@@ -324,6 +324,10 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+.task-upload-page {
+  font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
 .toprightbox {
     &>div {
         margin-left: 30px;

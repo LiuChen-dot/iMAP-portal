@@ -1,5 +1,5 @@
 <template>
-    <div style="height: 100%;overflow: scroll;overflow-x: hidden;">
+    <div class="task-details-page" style="height: 100%;overflow: scroll;overflow-x: hidden;">
         <div class="body">
             <div>
                 <div @click="router.go(-1)" style="padding:50px 100px 20px;">
@@ -89,6 +89,10 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+.task-details-page {
+  font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
 :deep(.el-drawer__title) {
     font-weight: bold;
     color: #04A983;

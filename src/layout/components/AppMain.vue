@@ -13,7 +13,7 @@
      
     </router-view>
     <!-- <iframe-toggle /> -->
-    <Bottom></Bottom>
+    <Bottom v-if="!isHomePage && !isIntelligentQA && !isPageWithOwnBottom"></Bottom>
   </section>
 </template>
 
@@ -21,19 +21,26 @@
 import iframeToggle from "./IframeToggle/index";
 import useTagsViewStore from "@/store/modules/tagsView";
 import Bottom from "./Bottom/index.vue";
+import { useRoute } from "vue-router";
+import { computed } from "vue";
+
 const tagsViewStore = useTagsViewStore();
+const route = useRoute();
+const isHomePage = computed(() => route.path === "/" || route.path === "/KnowledgeQuery");
+const isIntelligentQA = computed(() => route.path === "/IntelligentQ&A");
+// 以下页面在自身模板内已渲染 Bottom（或使用与布局不同的底部样式），布局不再重复渲染
+const isPageWithOwnBottom = computed(() =>
+  ["/Search", "/protein", "/basic_information", "/go_terms", "/small_molecule", "/rna", "/Gene", "/disease", "/KnowledgeGraph", "/GenomeBrowser", "/Stastics", "/taskupload", "/taskdetails"].includes(route.path)
+);
 </script>
 
 <style lang="scss" scoped>
 .app-main {
-  /* 50= navbar  50  */
-  // min-height: calc(100vh - 50px);
-  // min-height: calc(100vh - 84px);
   flex: 1;
   width: 100%;
+  min-height: 0;
   position: relative;
-  // overflow: hidden;
-  // overflow: auto;
+  overflow-y: auto;
 }
 
 .fixed-header + .app-main {
